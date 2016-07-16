@@ -96,7 +96,8 @@ void draw() {
     // Get the colors from the server
     //int colors[] = { 0, 0, 0, 0, 0, 0, 0, 0};
     int colorMatrix[][] = new int[numStrips][64];
-    Arrays.fill(colorMatrix, 0);
+    for (int[] row: colorMatrix)
+    Arrays.fill(row, 0);
     try {
       String lines[] = loadStrings("http://localhost:3000");
       if(lines.length > 0){
@@ -104,7 +105,7 @@ void draw() {
         for (int jsonRow = 0; jsonRow < strips.size(); jsonRow++) {
            JSONArray row = json.getJSONArray(String.valueOf(jsonRow)); 
            colorMatrix[jsonRow] = row.getIntArray();
-           println("Color Matrix Row: ");
+           println("Color Matrix Row: " + jsonRow);
            println (colorMatrix[jsonRow]);
         }
         
@@ -122,17 +123,17 @@ void draw() {
     for (int stripn = 0; stripn < strips.size(); stripn++) {
       Strip strip = strips.get(stripn);
       int xscale = width / strip.getLength();
-      int colorraw = colors[stripn];
-      int r = (colorraw >> 16) & 0xFF;
-      int g = (colorraw >> 8) & 0xFF;
-      int b = (colorraw >> 0) & 0xFF;
+      //int colorraw = colors[stripn];
+      //int r = (colorraw >> 16) & 0xFF;
+      //int g = (colorraw >> 8) & 0xFF;
+      //int b = (colorraw >> 0) & 0xFF;
       
-      color c = color(r, g, b);
-      println("Updating Strip " + stripn + " to color: " + c + "(" + colorraw + ": " + r + "," + g + "," + b + ")");
+      //color c = color(r, g, b);
+      //println("Updating Strip " + stripn + " to color: " + c + "(" + colorraw + ": " + r + "," + g + "," + b + ")");
       for (int stripx = 0; stripx < strip.getLength(); stripx++) {
         x = stripx*xscale + 1;
         y = stripy*yscale + 1;
-        strip.setPixel(c, stripx);
+        strip.setPixel(colorMatrix[stripn][stripx], stripx);
       }
       stripy++;
     }
