@@ -94,15 +94,23 @@ void draw() {
       return;
       
     // Get the colors from the server
-    int colors[] = { 0, 0, 0, 0, 0, 0, 0, 0};
+    //int colors[] = { 0, 0, 0, 0, 0, 0, 0, 0};
+    int colorMatrix[][] = new int[numStrips][64];
+    Arrays.fill(colorMatrix, 0);
     try {
       String lines[] = loadStrings("http://localhost:3000");
       if(lines.length > 0){
         JSONObject json = parseJSONObject(lines[0]);
-        JSONArray colorsArray = json.getJSONArray("colors");
-        for(int i = 0; i < colorsArray.size(); i++){
-          colors[i] = colorsArray.getInt(i); 
+        for (int jsonRow = 0; jsonRow < strips.size(); jsonRow++) {
+           JSONArray row = json.getJSONArray(String.valueOf(jsonRow)); 
+           colorMatrix[jsonRow] = row.getIntArray();
+           println("Color Matrix Row: ");
+           println (colorMatrix[jsonRow]);
         }
+        
+        //for(int i = 0; i < colorsArray.size(); i++){
+        //  colors[i] = colorsArray.getInt(i); 
+        //}
       }
       println("Got colors:");
       println(colors);

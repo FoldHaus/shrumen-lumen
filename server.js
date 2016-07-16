@@ -11,9 +11,20 @@ app.engine('html', engines.mustache);
 app.use(express.static(__dirname + '/public'));
 
 var scale = 0;
+var step = 0;
 
+function getFrame(step) {
+	var frame = {};
+	var baseArray = new Array(64).fill(0);
+	for(var i = 0; i < 7; i++) {	
+		baseArray[step % 64] = 255;
+		frame[i] = baseArray
+	}	
+	return frame;
+}
 app.get('/', function(req, res) {
 	//res.render('home.html')
+	
 	var dataForLights = {
 		colors: [
 		  (0xFF * scale) << 16,
@@ -22,7 +33,9 @@ app.get('/', function(req, res) {
 		  ((0xFF * scale) << 8) + (0xFF * scale)
 		]
 	};
-	res.send(dataForLights);
+
+	res.send(getFrame(step));
+	step++;
 	
 	scale += 0.01;
 	if(scale > 1){
