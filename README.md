@@ -2,6 +2,11 @@
 
 Shrumen Lumen software.
 
+# Parts
+
++ [WeightSensor Application](./WeightSensor)
+
+
 # RPi Setup Steps
 
 ## General Configurations
