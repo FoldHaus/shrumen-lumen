@@ -9,19 +9,24 @@
 #include <string.h>
 #include <stdlib.h>
 
+#define POST_URL "http://localhost:3001/weightsensor"
 #define CLOCK_PIN	5
 #define DATA_PIN	4
 #define N_SAMPLES	10
 #define SPREAD		10
 
-#define SCK_ON  digitalWrite(CLOCK_PIN, HIGH) //setSCK(1) //(GPIO_SET0 = (1 << CLOCK_PIN))
-#define SCK_OFF digitalWrite(CLOCK_PIN, LOW) //setSCK(0) //(GPIO_CLR0 = (1 << CLOCK_PIN))
-#define DT_R    digitalRead(DATA_PIN) //getData() //(GPIO_IN0  & (1 << DATA_PIN))
+#define SCK_ON  digitalWrite(sensorClockPin, HIGH) //setSCK(1) //(GPIO_SET0 = (1 << CLOCK_PIN))
+#define SCK_OFF digitalWrite(sensorClockPin, LOW) //setSCK(0) //(GPIO_CLR0 = (1 << CLOCK_PIN))
+#define DT_R    digitalRead(sensorDataPin) //getData() //(GPIO_IN0  & (1 << DATA_PIN))
 
 void           reset_converter(void);
 unsigned long  read_cnt(long offset, int argc);
 void           set_gain(int r);
 void           setHighPri (void);
+
+int sensorNumber = 1;
+int sensorClockPin = CLOCK_PIN;
+int sensorDataPin = DATA_PIN;
 
 void setHighPri (void)
 {
@@ -36,8 +41,19 @@ void setHighPri (void)
 
 void setup_gpio()
 {
-  pinMode(DATA_PIN, INPUT);
-  pinMode(CLOCK_PIN, OUTPUT);
+  pinMode(sensorDataPin, INPUT);
+  pinMode(sensorClockPin, OUTPUT);
+}
+
+int sendData(int data){
+	char cmd[200];
+	sprintf(cmd,
+		"curl -X POST %s -H \"Content-Type: application/json\" -d '{ \"sensor\": %d, \"data\": %d }'",
+		POST_URL,
+		sensorNumber,
+		data);
+	printf("cmd: %s\n", cmd);
+	system(cmd);
 }
 
 int main(int argc, char **argv)
@@ -61,8 +77,18 @@ int main(int argc, char **argv)
 
   printf("Starting...\n");
 
-  if (argc == 2) {
-   offset = atol(argv[1]);
+  if ( argc == 4 ){
+	sensorNumber = atol(argv[1]);
+	sensorClockPin = atol(argv[3]);
+	sensorDataPin = atol(argv[2]);
+  }
+
+  printf("Sensor Num: %d\n", sensorNumber);
+  printf(" Clock Pin: %d\n", sensorClockPin);
+  printf("  Data Pin: %d\n", sensorDataPin);
+
+  if (argc == 5) {
+   offset = atol(argv[4]);
   }
 
   printf("Offset: %d\n", offset);
@@ -79,6 +105,11 @@ int main(int argc, char **argv)
   while(1){
 	usleep(1000 * 1000);
 	long sampl = read_cnt(offset, argc) / 10000;
+
+	if(sampl > samples[0] * 10){
+		sampl = read_cnt(offset, argc) / 10000;
+	}
+
 	for(i = nsamples - 1; --i >= 1;){
 		samples[i] = samples[i-1];
 	}
@@ -99,6 +130,7 @@ int main(int argc, char **argv)
 	}
 
 	samples[0] = sampl;
+ 	sendData(samples[0]);
   }
 
   // get the dirty samples and average them
@@ -150,7 +182,7 @@ void set_gain(int r) {
 // r = 1 - 32  gain ch b
 // r = 2 - 63  gain ch a
 
-	while( DT_R ); 
+	while( DT_R );
 
 	for (i=0;i<24+r;i++) {
 		SCK_ON;
