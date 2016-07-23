@@ -85,7 +85,7 @@ void draw() {
     registry.setExtraDelay(0);
     registry.setAutoThrottle(true);
     registry.setAntiLog(true);    
-    int stripy = 0;
+    // int stripy = 0;
     List<Strip> strips = registry.getStrips();
     
     int numStrips = strips.size();
@@ -95,26 +95,48 @@ void draw() {
       
     // Get the colors from the server
     //int colors[] = { 0, 0, 0, 0, 0, 0, 0, 0};
-    int colorMatrix[][] = new int[numStrips][64];
-    for (int[] row: colorMatrix)
-    Arrays.fill(row, 0);
+
+    int ledStripsInCap = 6;
+    int ledStripsInStem = 2;
+
+    //Instantiate and set a matrix for cap
+    int capMatrix[][] = new int[numStrips][90];
+    for (int[] row: capMatrix)
+      Arrays.fill(row, 0);
+
+    //Instantiate and set a matrix for stem
+    int stemMatrix[][] = new int[numStrips][240];
+    for (int[] row: stemMatrix)
+      Arrays.fill(row, 0);
+
     try {
       String lines[] = loadStrings("http://localhost:3000");
       if(lines.length > 0){
         JSONObject json = parseJSONObject(lines[0]);
-        for (int jsonRow = 0; jsonRow < strips.size(); jsonRow++) {
-           JSONArray row = json.getJSONArray(String.valueOf(jsonRow)); 
-           colorMatrix[jsonRow] = row.getIntArray();
-           println("Color Matrix Row: " + jsonRow);
+
+        //Get the Objects containing cap and stem colors
+        JSONObject capColors = json.cap;
+        JSONObject stemColors = json.stem;
+
+
+        for (int jsonRow = 0; jsonRow < ledStripsInCap; jsonRow++) {
+           JSONArray row = capColors.getJSONArray(String.valueOf(jsonRow)); 
+           capMatrix[jsonRow] = row.getIntArray();
+           println("Cap Matrix Row: " + jsonRow);
            println (colorMatrix[jsonRow]);
         }
-        
-        //for(int i = 0; i < colorsArray.size(); i++){
-        //  colors[i] = colorsArray.getInt(i); 
-        //}
+
+        for (int jsonRow = 0; jsonRow < ledStripsInStem; jsonRow++) {
+           JSONArray row = stemColors.getJSONArray(String.valueOf(jsonRow)); 
+           stemMatrix[jsonRow] = row.getIntArray();
+           println("Stem Matrix Row: " + jsonRow);
+           println (colorMatrix[jsonRow]);
+        }
       }
+
       println("Got colors:");
       println(colors);
+      
     } catch(Exception e){
        println("Unable to reach server.");
     }
@@ -122,20 +144,26 @@ void draw() {
     int yscale = height / strips.size();
     for (int stripn = 0; stripn < strips.size(); stripn++) {
       Strip strip = strips.get(stripn);
-      int xscale = width / strip.getLength();
-      //int colorraw = colors[stripn];
-      //int r = (colorraw >> 16) & 0xFF;
-      //int g = (colorraw >> 8) & 0xFF;
-      //int b = (colorraw >> 0) & 0xFF;
-      
-      //color c = color(r, g, b);
+
+      int colors[] = (stripn < ledStripsInCap) ? capMatrix[stripn % ledStripsInCap] : stemMatrix[stripn % ledStripsInCap];
+
+      // int xscale = width / strip.getLength();
       //println("Updating Strip " + stripn + " to color: " + c + "(" + colorraw + ": " + r + "," + g + "," + b + ")");
       for (int stripx = 0; stripx < strip.getLength(); stripx++) {
-        x = stripx*xscale + 1;
-        y = stripy*yscale + 1;
-        strip.setPixel(colorMatrix[stripn][stripx], stripx);
+        // x = stripx*xscale + 1;
+        // y = stripy*yscale + 1;
+
+        int colorraw = colors[stripx];
+        println(colorraw)
+        int r = (colorraw >> 16) & 0xFF;
+        int g = (colorraw >> 8) & 0xFF;
+        int b = (colorraw >> 0) & 0xFF;
+        
+        color c = color(r, g, b);
+
+        strip.setPixel(c, stripx);
       }
-      stripy++;
+      // stripy++;
     }
   }
 }
