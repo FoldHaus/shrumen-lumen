@@ -1,6 +1,7 @@
 var express = require('express');
 var engines = require('consolidate');
 var mustache = require('mustache');
+var Rainbow = require('rainbowvis.js');
 
 var app = express();
 
@@ -10,37 +11,46 @@ app.set('view engine', 'html');
 app.engine('html', engines.mustache);
 app.use(express.static(__dirname + '/public'));
 
-var scale = 0;
 var step = 0;
 
+const ledsPerStripCountCap = 90;
+const ledsPerStripCountStem = 240;
+
+const ledStripsInCap = 6;
+const ledStripsInStem = 2;
+
+const numColorsInRainbow = 100;
+
+var capRainbow = new Rainbow();
+capRainbow.setNumberRange(1, numColorsInRainbow);
+
+var stemRainbow = new Rainbow();
+stemRainbow.setNumberRange(1, numColorsInRainbow);
+stemRainbow.setSpectrum('green', 'yellow', 'white');
+
 function getFrame(step) {
-	var frame = {};
-	var baseArray = new Array(64).fill(0);
-	for(var i = 0; i < 7; i++) {	
-		baseArray[step % 64] = 255;
-		frame[i] = baseArray
-	}	
-	return frame;
-}
-app.get('/', function(req, res) {
-	//res.render('home.html')
-	
-	var dataForLights = {
-		colors: [
-		  (0xFF * scale) << 16,
-		  (0xFF * scale) << 8,
-		  0xFF * scale,
-		  ((0xFF * scale) << 8) + (0xFF * scale)
-		]
+	var frame = {
+		cap: {},
+		stem: {}
 	};
 
-	res.send(getFrame(step));
-	step++;
-	
-	scale += 0.01;
-	if(scale > 1){
-		scale = 0;
+	var baseArrayStem = new Array(ledsPerStripCountStem).fill(0);
+
+	for(var i = 0; i < ledStripsInCap; i++) {	
+		var baseArrayCap = new Array(ledsPerStripCountCap).fill(capRainbow.colourAt(step));
+		frame.cap[i] = baseArrayCap
+	}	
+
+	for(var i = 0; i < ledStripsInStem; i++) {	
+		var baseArrayStem = new Array(ledsPerStripCountStem).fill(stemRainbow.colourAt(step));
+		frame.stem[i] = baseArrayStem
 	}
+	return frame;
+}
+
+app.get('/', function(req, res) {
+	res.send(getFrame(step % numColorsInRainbow));
+	step++;
 });
 
 /// catch 404 and forward to error handler
