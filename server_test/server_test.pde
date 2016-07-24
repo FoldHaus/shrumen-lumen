@@ -115,27 +115,24 @@ void draw() {
         JSONObject json = parseJSONObject(lines[0]);
 
         //Get the Objects containing cap and stem colors
-        JSONObject capColors = json.cap;
-        JSONObject stemColors = json.stem;
+        JSONObject capColors = json.getJSONObject("cap");
+        JSONObject stemColors = json.getJSONObject("stem");
 
 
         for (int jsonRow = 0; jsonRow < ledStripsInCap; jsonRow++) {
            JSONArray row = capColors.getJSONArray(String.valueOf(jsonRow)); 
            capMatrix[jsonRow] = row.getIntArray();
            println("Cap Matrix Row: " + jsonRow);
-           println (colorMatrix[jsonRow]);
+           println (capMatrix[jsonRow]);
         }
 
         for (int jsonRow = 0; jsonRow < ledStripsInStem; jsonRow++) {
            JSONArray row = stemColors.getJSONArray(String.valueOf(jsonRow)); 
            stemMatrix[jsonRow] = row.getIntArray();
            println("Stem Matrix Row: " + jsonRow);
-           println (colorMatrix[jsonRow]);
+           println (capMatrix[jsonRow]);
         }
       }
-
-      println("Got colors:");
-      println(colors);
       
     } catch(Exception e){
        println("Unable to reach server.");
@@ -146,18 +143,21 @@ void draw() {
       Strip strip = strips.get(stripn);
 
       int colors[] = (stripn < ledStripsInCap) ? capMatrix[stripn % ledStripsInCap] : stemMatrix[stripn % ledStripsInCap];
-
+      //println("Strip: " + stripn + ". Strip Length: " +strip.getLength());
+      
       // int xscale = width / strip.getLength();
       //println("Updating Strip " + stripn + " to color: " + c + "(" + colorraw + ": " + r + "," + g + "," + b + ")");
       for (int stripx = 0; stripx < strip.getLength(); stripx++) {
         // x = stripx*xscale + 1;
         // y = stripy*yscale + 1;
-
+        println("Array Length: " + colors.length);
+        println("Strip: " + stripn + ". Strip Length: " +strip.getLength());
         int colorraw = colors[stripx];
-        println(colorraw)
+        //println(colorraw);
         int r = (colorraw >> 16) & 0xFF;
         int g = (colorraw >> 8) & 0xFF;
         int b = (colorraw >> 0) & 0xFF;
+        println("r: " + r + ". g: " + g + ". b: " + b);
         
         color c = color(r, g, b);
 
