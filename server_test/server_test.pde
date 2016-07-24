@@ -100,14 +100,14 @@ void draw() {
     int ledStripsInStem = 2;
 
     //Instantiate and set a matrix for cap
-    int capMatrix[][] = new int[numStrips][90];
-    for (int[] row: capMatrix)
-      Arrays.fill(row, 0);
+    String capMatrix[][] = new String[numStrips][90];
+    for (String[] row: capMatrix)
+      Arrays.fill(row, "000");
 
     //Instantiate and set a matrix for stem
-    int stemMatrix[][] = new int[numStrips][240];
-    for (int[] row: stemMatrix)
-      Arrays.fill(row, 0);
+    String stemMatrix[][] = new String[numStrips][240];
+    for (String[] row: stemMatrix)
+      Arrays.fill(row, "000");
 
     try {
       String lines[] = loadStrings("http://localhost:3000");
@@ -121,16 +121,16 @@ void draw() {
 
         for (int jsonRow = 0; jsonRow < ledStripsInCap; jsonRow++) {
            JSONArray row = capColors.getJSONArray(String.valueOf(jsonRow)); 
-           capMatrix[jsonRow] = row.getIntArray();
-           println("Cap Matrix Row: " + jsonRow);
-           println (capMatrix[jsonRow]);
+           capMatrix[jsonRow] = row.getStringArray();
+           //println("Cap Matrix Row: " + jsonRow);
+           //println (capMatrix[jsonRow]);
         }
 
         for (int jsonRow = 0; jsonRow < ledStripsInStem; jsonRow++) {
            JSONArray row = stemColors.getJSONArray(String.valueOf(jsonRow)); 
-           stemMatrix[jsonRow] = row.getIntArray();
-           println("Stem Matrix Row: " + jsonRow);
-           println (capMatrix[jsonRow]);
+           stemMatrix[jsonRow] = row.getStringArray();
+           //println("Stem Matrix Row: " + jsonRow);
+           //println (capMatrix[jsonRow]);
         }
       }
       
@@ -142,22 +142,22 @@ void draw() {
     for (int stripn = 0; stripn < strips.size(); stripn++) {
       Strip strip = strips.get(stripn);
 
-      int colors[] = (stripn < ledStripsInCap) ? capMatrix[stripn % ledStripsInCap] : stemMatrix[stripn % ledStripsInCap];
-      //println("Strip: " + stripn + ". Strip Length: " +strip.getLength());
+      String colors[] = (stripn < ledStripsInCap) ? capMatrix[stripn % ledStripsInCap] : stemMatrix[stripn % ledStripsInCap];
+      //println("Strip: " + stripn + ". Colors Length: " + colors.length);
       
       // int xscale = width / strip.getLength();
       //println("Updating Strip " + stripn + " to color: " + c + "(" + colorraw + ": " + r + "," + g + "," + b + ")");
-      for (int stripx = 0; stripx < strip.getLength(); stripx++) {
+      for (int stripx = 0; stripx < colors.length; stripx++) {
         // x = stripx*xscale + 1;
         // y = stripy*yscale + 1;
-        println("Array Length: " + colors.length);
-        println("Strip: " + stripn + ". Strip Length: " +strip.getLength());
-        int colorraw = colors[stripx];
-        //println(colorraw);
+        //println("Strip: " + stripn + ". Strip Length: " +strip.getLength());
+        //print("Value: " + colors[stripx]);
+        int colorraw = unhex(colors[stripx]);
+        ////println(colorraw);
         int r = (colorraw >> 16) & 0xFF;
         int g = (colorraw >> 8) & 0xFF;
         int b = (colorraw >> 0) & 0xFF;
-        println("r: " + r + ". g: " + g + ". b: " + b);
+        //println("r: " + r + ". g: " + g + ". b: " + b);
         
         color c = color(r, g, b);
 
