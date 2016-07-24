@@ -82,7 +82,7 @@ void draw() {
   int y=0;
   if (testObserver.hasStrips) {   
     registry.startPushing();
-    registry.setExtraDelay(0);
+    registry.setExtraDelay(5);
     registry.setAutoThrottle(true);
     registry.setAntiLog(true);    
     // int stripy = 0;
@@ -152,16 +152,17 @@ void draw() {
         // y = stripy*yscale + 1;
         //println("Strip: " + stripn + ". Strip Length: " +strip.getLength());
         //print("Value: " + colors[stripx]);
-        int colorraw = unhex(colors[stripx]);
-        ////println(colorraw);
-        int r = (colorraw >> 16) & 0xFF;
-        int g = (colorraw >> 8) & 0xFF;
-        int b = (colorraw >> 0) & 0xFF;
+        //int colorraw = unhex(colors[stripx]);
+        String colorraw = colors[stripx];
+        //////println(colorraw);
+        //int r = (colorraw >> 16) & 0xFF;
+        //int g = (colorraw >> 8) & 0xFF;
+        //int b = (colorraw >> 0) & 0xFF;
         //println("r: " + r + ". g: " + g + ". b: " + b);
         
-        color c = color(r, g, b);
+        //color c = color(r, g, b);
 
-        strip.setPixel(c, stripx);
+        strip.setPixel(Integer.decode("#"+colorraw), stripx);
       }
       // stripy++;
     }

@@ -19,14 +19,23 @@ const ledsPerStripCountStem = 240;
 const ledStripsInCap = 6;
 const ledStripsInStem = 2;
 
-const numColorsInRainbow = 100;
+const numColorsInRainbow = 400;
 
 var capRainbow = new Rainbow();
 capRainbow.setNumberRange(1, numColorsInRainbow);
+capRainbow.setSpectrum('blue', 'purple', 'blue');
 
 var stemRainbow = new Rainbow();
 stemRainbow.setNumberRange(1, numColorsInRainbow);
-stemRainbow.setSpectrum('green', 'yellow', 'white');
+stemRainbow.setSpectrum('yellow', 'white', 'yellow');
+
+var testStep = 0;
+var testColors = [
+			['blue', 'green', 'red'], 
+			['red', 'yellow', 'blue'],
+			['blue', 'orange', 'green'],
+			['green', 'white', 'blue']]
+
 
 function getFrame(step) {
 	var frame = {
@@ -51,6 +60,11 @@ function getFrame(step) {
 app.get('/', function(req, res) {
 	res.send(getFrame(step % numColorsInRainbow));
 	step++;
+	if (step % numColorsInRainbow == 0) {
+		var newColors = testColors[testStep % testColors.length];
+		capRainbow.setSpectrum(newColors[0], newColors[1], newColors[2]);
+		testStep++;
+	}
 });
 
 /// catch 404 and forward to error handler
