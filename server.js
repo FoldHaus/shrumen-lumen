@@ -78,8 +78,9 @@ app.get('/', function(req, res) {
 
 // A handler for data coming from the Weight Sensors
 app.post('/weightsensor', function(req, res) {
+	var sensorNumber = req.body.number;
 	var sensorValue = req.body.data;
-	var steppedOn = weightSensorInterface.registerNewData(sensorValue);
+	var steppedOn = weightSensorInterface.registerNewData(sensorNumber, sensorValue);
 	console.log(steppedOn)
 	res.sendStatus(200);
 });

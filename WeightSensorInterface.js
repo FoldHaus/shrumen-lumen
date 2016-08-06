@@ -11,7 +11,7 @@ class WeightSensorInterface {
 			response = ws.stepSense(sensorData);
 		}
 		else {
-			var sensor = new WeightSensor(sensorNumber);
+			var sensor = new WeightSensor(sensorNum);
 			response = sensor.stepSense(sensorData);
 			this.weightSensors[sensorNum] = sensor;
 		}
