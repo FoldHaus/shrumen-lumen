@@ -1,4 +1,5 @@
 var express = require('express');
+var bodyParser = require('body-parser');
 var engines = require('consolidate');
 var mustache = require('mustache');
 var Rainbow = require('rainbowvis.js');
@@ -10,6 +11,14 @@ app.set('views', __dirname + '/public');
 app.set('view engine', 'html');
 app.engine('html', engines.mustache);
 app.use(express.static(__dirname + '/public'));
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+	extended: true
+}));
+
+var WeightSensor = require("./weightSensor.js");
+var weightSensor = new WeightSensor();
 
 var step = 0;
 
@@ -66,6 +75,15 @@ app.get('/', function(req, res) {
 		testStep++;
 	}
 });
+
+app.post('/weightsensor', function(req, res) {
+	var sensorValue = req.body.data;
+	console.log("Incoming Data: " + req.body.data)
+	var steppedOn = weightSensor.stepSense(sensorValue);
+	console.log(steppedOn)
+	res.send(steppedOn)
+});
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

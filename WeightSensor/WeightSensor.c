@@ -9,7 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define POST_URL "http://localhost:3001/weightsensor"
+#define POST_URL "http://localhost:3000/weightsensor"
 #define N_SAMPLES	10
 #define SPREAD		10
 
