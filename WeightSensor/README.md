@@ -9,15 +9,16 @@ The app will also post the data to http://localhost:3001/sensordata. Use the sam
 Helper files:
 
 + `sensor1.sh` - Runs application for sensor 1
-	+ VCC - pin 2
-	+ DAT - pin 16 (GPIO 23)
-	+ CLK - pin 18 (GPIO 24)
-	+ GND - pin 20
-+ `sensor2.sh` - Runs application for sensor 2
 	+ VCC - pin 4
 	+ DAT - pin 10 (GPIO 15)
 	+ CLK - pin 12 (GPIO 18)
 	+ GND - pin 14
+
++ `sensor2.sh` - Runs application for sensor 2
+	+ VCC - pin 2
+	+ DAT - pin 16 (GPIO 23)
+	+ CLK - pin 18 (GPIO 24)
+	+ GND - pin 20
 
 ** NOTE: Pins must be exported to work **
 

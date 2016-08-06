@@ -1,1 +1,1 @@
-sudo ./WeightSensor 2 4 5
+sudo ./WeightSensor 2 23 24
