@@ -17,8 +17,8 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
-var WeightSensor = require("./weightSensor.js");
-var weightSensor = new WeightSensor();
+var WeightSensorInterface = require("./WeightSensorInterface.js");
+var weightSensorInterface = new WeightSensorInterface();
 
 var step = 0;
 
@@ -76,12 +76,12 @@ app.get('/', function(req, res) {
 	}
 });
 
+// A handler for data coming from the Weight Sensors
 app.post('/weightsensor', function(req, res) {
 	var sensorValue = req.body.data;
-	console.log("Incoming Data: " + req.body.data)
-	var steppedOn = weightSensor.stepSense(sensorValue);
+	var steppedOn = weightSensorInterface.registerNewData(sensorValue);
 	console.log(steppedOn)
-	res.send(steppedOn)
+	res.sendStatus(200);
 });
 
 

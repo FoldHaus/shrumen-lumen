@@ -1,11 +1,36 @@
-class WeightSensor {
+class WeightSensorInterface {
 	constructor() {
-		this.recentValues = []
+		this.weightSensors = {};
+	}
+
+	registerNewData(sensorNum, sensorData) {
+		var response;
+
+		if(sensorNum in this.weightSensors) {
+			var ws = this.weightSensors[sensorNum];
+			response = ws.stepSense(sensorData);
+		}
+		else {
+			var sensor = new WeightSensor(sensorNumber);
+			response = sensor.stepSense(sensorData);
+			this.weightSensors[sensorNum] = sensor;
+		}
+
+		return response;
+	}
+}
+
+
+
+class WeightSensor {
+	constructor(sensorNumber) {
+		this.sensorNumber = sensorNumber;
+		this.recentValues = [];
 		this.state = false;
 	}
 
 	addValueToRecents(value) {
-		if(this.recentValues.length <= 10) {
+		if(this.recentValues.length <= 5) {
 			this.recentValues.push(value)
 		}
 		else {
@@ -42,4 +67,4 @@ class WeightSensor {
 	}
 }
 
-module.exports = WeightSensor;
+module.exports = WeightSensorInterface;
