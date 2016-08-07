@@ -17,8 +17,13 @@ app.use(bodyParser.urlencoded({
 	extended: true
 }));
 
+//Add a module containing a class for interacting with the WeightSensor
 var WeightSensorInterface = require("./WeightSensorInterface.js");
 var weightSensorInterface = new WeightSensorInterface();
+
+//Add a module containing a class for interacting with the WeightSensor
+var WeightSensorInterface = require("./PadInterface.js");
+var padInterface = new PadInterface(60);
 
 var step = 0;
 
@@ -81,6 +86,12 @@ app.post('/weightsensor', function(req, res) {
 	var sensorNumber = req.body.number;
 	var sensorValue = req.body.data;
 	var steppedOn = weightSensorInterface.registerNewData(sensorNumber, sensorValue);
+	if(steppedOn) {
+		padInterface.green();
+	}
+	else {
+		padInterface.red();
+	}
 	console.log(steppedOn)
 	res.sendStatus(200);
 });
