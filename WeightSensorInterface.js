@@ -40,29 +40,38 @@ class WeightSensor {
 	}
 
 	stepSense(value) {
-		var thresholdScaler = 3;
-		var recents = this.recentValues;
-		console.log("New Value: " + value)
-		console.log("Recents: " + recents)
+		// var thresholdScaler = 3;
+		// var recents = this.recentValues;
+		// console.log("New Value: " + value)
+		// console.log("Recents: " + recents)
 
-		if(recents.length > 0) {
-			var recentValueSum = recents.reduce(function(a, b) {
-				return (a+b);
-			});
-			var recentValuesAverage = recentValueSum / recents.length;
-			console.log("Recent Average: " + recentValuesAverage)
+		// if(recents.length > 0) {
+		// 	var recentValueSum = recents.reduce(function(a, b) {
+		// 		return (a+b);
+		// 	});
+		// 	var recentValuesAverage = recentValueSum / recents.length;
+		// 	console.log("Recent Average: " + recentValuesAverage)
 
-			if(value > thresholdScaler*recentValuesAverage) {
-				this.state = true;
-				console.log("Changed state to true")
-			}
-			else if (value < (1/thresholdScaler)*recentValuesAverage) {
-				this.state = false;
-				console.log("Changed state to false")
-			}
+		// 	if(value > thresholdScaler*recentValuesAverage) {
+		// 		this.state = true;
+		// 		console.log("Changed state to true")
+		// 	}
+		// 	else if (value < (1/thresholdScaler)*recentValuesAverage) {
+		// 		this.state = false;
+		// 		console.log("Changed state to false")
+		// 	}
+		// }
+
+		// this.addValueToRecents(value);
+		// return this.state;
+
+		if(value > 20) {
+			this.state = true;
 		}
-
-		this.addValueToRecents(value);
+		else {
+			this.state = false;
+		}
+		
 		return this.state;
 	}
 }
