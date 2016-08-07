@@ -22,7 +22,7 @@ var WeightSensorInterface = require("./WeightSensorInterface.js");
 var weightSensorInterface = new WeightSensorInterface();
 
 //Add a module containing a class for interacting with the WeightSensor
-var WeightSensorInterface = require("./PadInterface.js");
+var PadInterface = require("./PadInterface.js");
 var padInterface = new PadInterface(60);
 
 var step = 0;
