@@ -1,0 +1,12 @@
+[Unit]
+Description=Blumen Shrumen Pixelpusher Weight Sensor Script
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/home/pi/Desktop/pi-server/startup/startup-weightsensor.sh > /home/pi/Desktop/startup-weightsensor.log 2>&1
+Environment=NODE_ENV=production
+User=pi
+
+[Install]
+WantedBy=multi-user.target
