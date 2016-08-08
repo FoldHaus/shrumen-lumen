@@ -41,7 +41,7 @@ capRainbow.setSpectrum('blue', 'purple', 'blue');
 
 var stemRainbow = new Rainbow();
 stemRainbow.setNumberRange(1, numColorsInRainbow);
-stemRainbow.setSpectrum('yellow', 'white', 'yellow');
+stemRainbow.setSpectrum('white', 'white', 'white');
 
 var testStep = 0;
 var testColors = [
@@ -83,7 +83,7 @@ app.get('/', function(req, res) {
 
 // A handler for data coming from the Weight Sensors
 app.post('/weightsensor', function(req, res) {
-	var sensorNumber = req.body.number;
+	var sensorNumber = req.body.sensor;
 	var sensorValue = req.body.data;
 	var steppedOn = weightSensorInterface.registerNewData(sensorNumber, sensorValue);
 	if(steppedOn) {
