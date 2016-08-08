@@ -65,7 +65,7 @@ class WeightSensor {
 		// this.addValueToRecents(value);
 		// return this.state;
 
-		if(value > 20) {
+		if(value > 15) {
 			this.state = true;
 		}
 		else {

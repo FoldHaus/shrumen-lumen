@@ -82,7 +82,7 @@ void draw() {
   int y=0;
   if (testObserver.hasStrips) {   
     registry.startPushing();
-    registry.setExtraDelay(5);
+    registry.setExtraDelay(15);
     registry.setAutoThrottle(true);
     registry.setAntiLog(true);    
     // int stripy = 0;
