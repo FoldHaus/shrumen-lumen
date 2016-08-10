@@ -20,8 +20,9 @@ class PadInterface {
 	}
 
 	green() {
-		console.log("Turning pad green");
+		
 		if(this.state != 'green') {
+			console.log("Turning pad green");
 			this.state = 'green';
 			var pixelData = this.pixelData;
 			for(var i = 0; i < this.numLEDs; i++){
@@ -33,8 +34,9 @@ class PadInterface {
 	}
 
 	red() {
-		console.log("Turning pad red");
+		
 		if(this.state != 'red') {
+			console.log("Turning pad red");
 			this.state = 'red';
 			var pixelData = this.pixelData;
 			for(var i = 0; i < this.numLEDs; i++){

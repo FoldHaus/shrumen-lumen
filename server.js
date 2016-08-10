@@ -87,12 +87,12 @@ app.post('/weightsensor', function(req, res) {
 	var sensorValue = req.body.data;
 	var steppedOn = weightSensorInterface.registerNewData(sensorNumber, sensorValue);
 	if(steppedOn) {
+		console.log("Stepped On!");
 		padInterface.green();
 	}
 	else {
 		padInterface.red();
 	}
-	console.log(steppedOn)
 	res.sendStatus(200);
 });
 
