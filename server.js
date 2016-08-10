@@ -18,12 +18,15 @@ app.use(bodyParser.urlencoded({
 }));
 
 //Add a module containing a class for interacting with the WeightSensor
-var WeightSensorInterface = require("./WeightSensorInterface.js");
+var WeightSensorInterface = require("./lib/WeightSensorInterface.js");
 var weightSensorInterface = new WeightSensorInterface();
 
 //Add a module containing a class for interacting with the WeightSensor
-var PadInterface = require("./PadInterface.js");
+var PadInterface = require("./lib/PadInterface.js");
 var padInterface = new PadInterface(60);
+
+// Module for setting state
+var setState = require('./lib/setState.js');
 
 var step = 0;
 
@@ -49,6 +52,7 @@ var testColors = [
 			['red', 'yellow', 'blue'],
 			['blue', 'orange', 'green'],
 			['green', 'white', 'blue']]
+			
 
 
 function getFrame(step) {
@@ -71,14 +75,8 @@ function getFrame(step) {
 	return frame;
 }
 
-app.get('/', function(req, res) {
-	res.send(getFrame(step % numColorsInRainbow));
-	step++;
-	if (step % numColorsInRainbow == 0) {
-		var newColors = testColors[testStep % testColors.length];
-		capRainbow.setSpectrum(newColors[0], newColors[1], newColors[2]);
-		testStep++;
-	}
+app.get('/state', function(req, res) {
+	res.send(setState());
 });
 
 // A handler for data coming from the Weight Sensors
