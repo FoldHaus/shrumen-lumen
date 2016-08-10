@@ -51,8 +51,10 @@ String getState() {
   
   return animationState;
 }
-  
-  
+
+Default df;
+Green gr;
+
 void setup() {
   registry = new DeviceRegistry();
   testObserver = new TestObserver();
@@ -60,22 +62,18 @@ void setup() {
   colorMode(HSB, 100);
   size(480, 64);
   frameRate(300);
+  
+  
+   df = new Default();
+   gr = new Green();
 }
 
 void draw() {
-  int x=0;
-  int y=0;
   if (testObserver.hasStrips) {
         registry.setFrameLimit(1000);   
         registry.startPushing();
         registry.setExtraDelay(10);
         registry.setAutoThrottle(false);    
-        
-        // Every 1000 frames request new data 
-        if(frameCount % 1000 == 0){
-          thread("getState");
-          println(state);
-        }
        
         int stripy = 0;
         List<Strip> strips = registry.getStrips();
@@ -83,20 +81,35 @@ void draw() {
         //println("Strips total = "+numStrips);
         if (numStrips == 0)
           return;
-          
         
+        // Every 1000 frames request new data 
+        if(frameCount % 1000 == 0){
+          thread("getState");
+          println(state);
+        }
         
-     
-     //   for(Strip strip : strips) {
-     //     for (int stripx = 0; stripx < strip.getLength(); stripx++) {
-     //         color c = color(255, 255, 255);
-     //         strip.setPixel(c, stripx);
-     //      }
-     //     stripy++;
-     //   }
-        
-        
-        
-        
+        // Determine which state the animations should
+        // be in.
+        switch(state) {
+          case "default":
+            // Run default script
+            fill(255, 0, 0);
+            rect(0, 0, 100, 100);
+            //gr.display();
+          default:
+            // Run default script
+            //df.display();
+            
+        }
+       
+        // Apply the color value to the pixels in the strips
+        //for(Strip strip : strips) {
+        //  for (int stripx = 0; stripx < strip.getLength(); stripx++) {
+        //      color c = color(255, 255, 255);
+        //      strip.setPixel(c, stripx);
+        //   }
+        //  stripy++;
+        //}
+
       }
 }
