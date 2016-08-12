@@ -76,7 +76,7 @@ function getFrame(step) {
 }
 
 app.get('/state', function(req, res) {
-	res.send(setState());
+	res.send(setState("test"));
 });
 
 // A handler for data coming from the Weight Sensors

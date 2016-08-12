@@ -14,9 +14,9 @@ DeviceRegistry registry;
 class TestObserver implements Observer {
   public boolean hasStrips = false;
   public void update(Observable registry, Object updatedDevice) {
-        println("Registry changed!");
+        //println("Registry changed!");
         if (updatedDevice != null) {
-          println("Device change: " + updatedDevice);
+          //println("Device change: " + updatedDevice);
         }
         this.hasStrips = true;
     }
@@ -27,7 +27,7 @@ TestObserver testObserver;
 // Global Animation State
 String state = "default";
 
-String getState() {
+void getState() {
  String animationState = "default";
  
  try {
@@ -35,40 +35,47 @@ String getState() {
     String lines[] = loadStrings("http://localhost:3000/state");
     
     if(lines.length > 0){
+      println("Got data from server.");
       // Parse Data from server
       JSONObject json = parseJSONObject(lines[0]);
-
-      // Get the Objects containing cap and stem colors
-      JSONObject state = json.getJSONObject("state");
+      
+      // Get the String representing the state
+      String state = json.getString("state");
       
       // Resturn the state value
-      animationState = state.toString();
+      animationState = state;
     }
     
   } catch(Exception e){
      println("Unable to reach server.");
   }
-  
-  return animationState;
+ 
+  state = animationState;
 }
 
 Default df;
 Green gr;
 
+final int CAP_STRIP_LENGTH = 60;
+final int STEMP_STRIP_LENGTH = 240;
+
+final List<Integer> STEM_STRIPS = Arrays.asList(6, 7); 
+
 void setup() {
   registry = new DeviceRegistry();
   testObserver = new TestObserver();
   registry.addObserver(testObserver);
-  colorMode(HSB, 100);
-  size(480, 64);
-  frameRate(300);
+  colorMode(RGB, 255);
+  size(128, 12);
+  frameRate(100);
   
-  
-   df = new Default();
-   gr = new Green();
+  df = new Default();
+  gr = new Green();
 }
 
 void draw() {
+  int x=0;
+  int y=0;
   if (testObserver.hasStrips) {
         registry.setFrameLimit(1000);   
         registry.startPushing();
@@ -83,33 +90,48 @@ void draw() {
           return;
         
         // Every 1000 frames request new data 
-        if(frameCount % 1000 == 0){
-          thread("getState");
-          println(state);
+        if(frameCount % 500 == 0){
+          thread("getState");  
         }
         
         // Determine which state the animations should
         // be in.
+        println("STATE: " + state);
         switch(state) {
-          case "default":
-            // Run default script
-            fill(255, 0, 0);
-            rect(0, 0, 100, 100);
-            //gr.display();
+          case "test":
+            // Run test script
+            gr.display();
+            break;
           default:
             // Run default script
-            //df.display();
+            df.display();
+            break;
             
         }
-       
-        // Apply the color value to the pixels in the strips
-        //for(Strip strip : strips) {
-        //  for (int stripx = 0; stripx < strip.getLength(); stripx++) {
-        //      color c = color(255, 255, 255);
-        //      strip.setPixel(c, stripx);
-        //   }
-        //  stripy++;
-        //}
+        
+        //Apply the color value to the pixels in the strips
+        int yscale = height / (strips.size() - STEM_STRIPS.size());
+        for(Strip strip : strips) {
+          //Check if the strip is a stem strip or a cap strip
+          if(!STEM_STRIPS.contains(strip.getStripNumber())) { 
+            int xscale = width / CAP_STRIP_LENGTH;
+            for (int stripx = 0; stripx < strip.getLength(); stripx++) {
+                x = stripx*xscale + 1;
+                y = stripy*yscale + 1; 
+                color c = get(x, y);
+                 
+                strip.setPixel(c, stripx);
+             }
+            stripy++;
+          }
+          else {
+            //Set all the stem pixels to white
+            for (int i = 0; i < strip.getLength(); i++) {
+              color c = color(255, 255, 255);
+              strip.setPixel(c, i);            
+            }
+          }
+        }
 
       }
 }
