@@ -30,4 +30,4 @@ After exporting the pin, you should see a new folder in the `/sys/class/gpio' fo
 ## References
 
 + [wiringPi](http://andyseasysite.com/?page_id=145)
-+ [RPi Pinout](http://docs.biicode.com/raspberrypi/rpi-howto.html#rpigpio)
++ [RPi Pinout](https://pinout.xyz/)
