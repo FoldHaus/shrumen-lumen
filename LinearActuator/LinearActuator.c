@@ -8,15 +8,20 @@
 
 
 #define GET_URL "http://localhost:3000/linearactuator"
-#define DIRECTION_PIN 6
-#define PWM_PIN 12
-#define MIN_DELAY_TIME 1000
 
+//Digital Pin for setting direction
+#define DIRECTION_PIN 6
+
+//PWM Pin for setting speeds
+#define PWM_PIN 12
+
+// Setup a struct for strings
 struct string {
   char *ptr;
   size_t len;
 };
 
+//Function for initializing string
 void init_string(struct string *s) {
   s->len = 0;
   s->ptr = malloc(s->len+1);
@@ -27,6 +32,7 @@ void init_string(struct string *s) {
   s->ptr[0] = '\0';
 }
 
+//Writing data to the string
 size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
 {
   size_t new_len = s->len + size*nmemb;
@@ -42,14 +48,21 @@ size_t writefunc(void *ptr, size_t size, size_t nmemb, struct string *s)
   return size*nmemb;
 }
 
-
+//Set an initial global state variable
+//  1: Extending
+//  0: Stopped
+// -1: Retracting
 int state = 0;
+
+//Initialize the pins with correct types
 void setup_gpio()
 {
   pinMode(DIRECTION_PIN, OUTPUT);
   pinMode(PWM_PIN, PWM_OUTPUT);
 }
 
+//A function that use the libcurl library to get the 
+//linear actuator state from the Node.js server.
 void getState(){
 	
 	CURL *curl;
@@ -75,8 +88,13 @@ void getState(){
 			curl_easy_strerror(res));
 		}
 		
+		//Parse the string into JSON
 		cJSON * json = cJSON_Parse(s.ptr);
+		
+		//Get the state as an integer
 		state = cJSON_GetObjectItem(json, "state")->valueint;
+		
+		//Delete the JSON object and free the string
 		cJSON_Delete(json);
 		printf("New State: %d\n", state);
 		free(s.ptr);
@@ -85,6 +103,8 @@ void getState(){
 		curl_easy_cleanup(curl);
 	}
 	
+	//Cleanup the CURLs info globablly.
+	//One call to this paired with each globabl init.
 	curl_global_cleanup();
 }
 
@@ -108,9 +128,6 @@ void extendActuator() {
 }
 
 int main(int argc, char **argv) {
-	
-	
-	printf("At least this works");
 
 	//Setup WiringPi w/ GPIO pins
 	if(wiringPiSetupGpio() == -1)
@@ -118,6 +135,7 @@ int main(int argc, char **argv) {
 	//~ Set the pins to the correct output types.
 	setup_gpio();
 	
+	//Start the program by stopping the actuator
 	stopActuator();
 	
 	while(1) {

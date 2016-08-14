@@ -2,28 +2,31 @@
 
 Using the Cytron MD30C motor controller to drive the 16A linear actuator using the RPi.
 
-This uses the WiringPi library.
+This uses the WiringPi library, as well as libcurl4 and cJSON to send GET requests and parse the responses.
 
 The app will also post the data to http://localhost:3000/linearactuator. Ensure that the `server.js` file in the main directory is running as well.
 
-Helper files: [TO BE CHANGED]
+##Installation:
+To install libcurl4, run the following:
 
-+ `sensor1.sh` - Runs application for sensor 1
-        + VCC - pin 4
-        + DAT - pin 10 (GPIO 15)
-        + CLK - pin 12 (GPIO 18)
-        + GND - pin 14
+```
+sudo apt-get update
+sudo apt-get install libcurl4-openssl-dev
+```
 
-+ `sensor2.sh` - Runs application for sensor 2
-        + VCC - pin 2
-        + DAT - pin 16 (GPIO 23)
-        + CLK - pin 18 (GPIO 24)
-        + GND - pin 20
+The cJSON files are included in the repo. 
+
+Make sure to run `make` when changes are made. The Makefile links the cJSON, libcurl, and math libraries automatically.
+
+##Pins:
+DIR - GPIO 6
+PWM - GPIO 12
+GNG - GPIO 13 
 
 ** NOTE: Pins must be exported to work **
 
-To export a pin, for example GPIO 23:
-`echo 23 > /sys/class/gpio/export`
+To export a pin, for example GPIO 6:
+`echo 6 > /sys/class/gpio/export`
 
 After exporting the pin, you should see a new folder in the `/sys/class/gpio' folder. You can check to see that these pins are set correctly as inputs and outputs by editing the `direction` folder within in each pin's folder (ex. `/sys$
 
