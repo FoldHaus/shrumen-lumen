@@ -101,10 +101,9 @@ app.post('/weightsensor', function(req, res) {
 
 // A handler for data coming from the Linear Actuators
 app.get('/linearactuator', function(req, res) {
-	var linearActuatorState = linearActuatorInterface.getLinearActuatorState(weightSensorInterface);
+	var linearActuatorState = linearActuatorInterface.getLinearActuatorState();
 	console.log("Linear Actuator State: " + linearActuatorState);
 	res.send( {state: linearActuatorState, time: new Date()} );
-	//~ res.sendStatus(200);
 });
 
 
