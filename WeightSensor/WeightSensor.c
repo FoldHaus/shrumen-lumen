@@ -9,9 +9,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#define POST_URL "http://localhost:3001/weightsensor"
-#define CLOCK_PIN	5
-#define DATA_PIN	4
+#define POST_URL "http://localhost:3000/weightsensor"
 #define N_SAMPLES	10
 #define SPREAD		10
 
@@ -25,8 +23,8 @@ void           set_gain(int r);
 void           setHighPri (void);
 
 int sensorNumber = 1;
-int sensorClockPin = CLOCK_PIN;
-int sensorDataPin = DATA_PIN;
+int sensorClockPin;
+int sensorDataPin;
 
 void setHighPri (void)
 {
@@ -58,7 +56,7 @@ int sendData(int data){
 
 int main(int argc, char **argv)
 {
-  if(wiringPiSetup() == -1)
+  if(wiringPiSetupGpio() == -1)
 	exit(1);
 
   int i, j;
@@ -98,14 +96,13 @@ int main(int argc, char **argv)
 
   j=0;
 
-  printf("Starting smapling...\n");
+  printf("Starting sampling...\n");
 
 
 
   while(1){
 	usleep(1000 * 1000);
 	long sampl = read_cnt(offset, argc) / 10000;
-
 	if(sampl > samples[0] * 10){
 		sampl = read_cnt(offset, argc) / 10000;
 	}
@@ -199,7 +196,6 @@ unsigned long read_cnt(long offset, int argc) {
 	int b;
 
   count = 0;
-
   while( DT_R );
 
   for(i=0;i<24	; i++) {

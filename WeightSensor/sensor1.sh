@@ -1,1 +1,1 @@
-sudo ./WeightSensor 1 16 1
+sudo /home/pi/Desktop/pi-server/WeightSensor/WeightSensor 1 15 18
