@@ -26,7 +26,7 @@ var PadInterface = require("./lib/PadInterface.js");
 var padInterface = new PadInterface(60);
 
 //Add a module containing a class for interacting with the LinearActuator
-var LinearActuatorInterface = require("./lib/LinearActuator.js");
+var LinearActuatorInterface = require("./lib/LinearActuatorInterface.js");
 var linearActuatorInterface = new LinearActuatorInterface();
 
 // Module for setting animation state
@@ -87,22 +87,24 @@ app.get('/state', function(req, res) {
 app.post('/weightsensor', function(req, res) {
 	var sensorNumber = req.body.sensor;
 	var sensorValue = req.body.data;
-	var steppedOn = weightSensorInterface.registerNewData(sensorNumber, sensorValue);
+	var steppedOn = weightSensorInterface.registerNewData(sensorValue);
 	if(steppedOn) {
 		console.log("Stepped On!");
-		padInterface.green();
+		//~ padInterface.green();
 	}
 	else {
-		padInterface.red();
+		//~ padInterface.red();
 	}
 	res.sendStatus(200);
 });
 
 
 // A handler for data coming from the Linear Actuators
-app.post('/linearactuator', function(req, res) {
+app.get('/linearactuator', function(req, res) {
 	var linearActuatorState = linearActuatorInterface.getLinearActuatorState(weightSensorInterface);
-	res.send( {state: linearActuatorState} );
+	console.log("Linear Actuator State: " + linearActuatorState);
+	res.send( {state: linearActuatorState, time: new Date()} );
+	//~ res.sendStatus(200);
 });
 
 
