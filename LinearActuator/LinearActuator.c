@@ -95,17 +95,13 @@ void stopActuator() {
 
 void retractActuator() {
 	stopActuator();
-	printf("Waiting for minimum delay time of ");
-	printf("%d\n", MIN_DELAY_TIME);
-	delay(MIN_DELAY_TIME);
 	printf("Retracting...\n");
 	digitalWrite(DIRECTION_PIN, HIGH);
 	pwmWrite(PWM_PIN, 1024);
-	delay(1000);
-	stopActuator();
 }
 
 void extendActuator() {
+	stopActuator();
 	printf("Extending...\n");
 	digitalWrite(DIRECTION_PIN, LOW);
 	pwmWrite(PWM_PIN, 1024);
@@ -119,11 +115,10 @@ int main(int argc, char **argv) {
 	//Setup WiringPi w/ GPIO pins
 	if(wiringPiSetupGpio() == -1)
 		exit(1);
-	//~ 
-	//~ // Set the pins to the correct output types.
+	//~ Set the pins to the correct output types.
 	setup_gpio();
 	
-	//~ stopActuator();
+	stopActuator();
 	
 	while(1) {
 		usleep(500 * 1000);
@@ -133,16 +128,13 @@ int main(int argc, char **argv) {
 		
 		printf("%d\n", state);
 		if(state == 1) {
-			printf("WOULD EXTEND");
 			extendActuator();
 		}
 		else if(state == 0) {
-			printf("WOULD STOP");
-			retractActuator();
+			stopActuator();
 		}
 		else if (state == -1){
-			printf("WOULD RETRACT");
-			//~ retractActuator();
+			retractActuator();
 		}			
 	}
 	
