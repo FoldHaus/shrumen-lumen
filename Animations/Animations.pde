@@ -51,6 +51,7 @@ void getState() {
   }
  
   state = animationState;
+  println("STATE: " + state);
 }
 
 Default df;
@@ -96,7 +97,6 @@ void draw() {
         
         // Determine which state the animations should
         // be in.
-        println("STATE: " + state);
         switch(state) {
           case "test":
             // Run test script
@@ -112,9 +112,11 @@ void draw() {
         //Apply the color value to the pixels in the strips
         int yscale = height / (strips.size() - STEM_STRIPS.size());
         for(Strip strip : strips) {
+          
           //Check if the strip is a stem strip or a cap strip
           if(!STEM_STRIPS.contains(strip.getStripNumber())) { 
             int xscale = width / CAP_STRIP_LENGTH;
+            
             for (int stripx = 0; stripx < strip.getLength(); stripx++) {
                 x = stripx*xscale + 1;
                 y = stripy*yscale + 1; 
@@ -125,7 +127,7 @@ void draw() {
             stripy++;
           }
           else {
-            //Set all the stem pixels to white
+            //Set the stem pixels to white
             for (int i = 0; i < strip.getLength(); i++) {
               color c = color(255, 255, 255);
               strip.setPixel(c, i);            
