@@ -58,7 +58,8 @@ int state = 0;
 void setup_gpio()
 {
   pinMode(DIRECTION_PIN, OUTPUT);
-  pinMode(PWM_PIN, PWM_OUTPUT);
+  //pinMode(PWM_PIN, OUTPUT);
+  softPwmCreate(PWM_PIN, 0, 100);
 }
 
 //A function that use the libcurl library to get the 
@@ -84,8 +85,9 @@ void getState(){
 		
 		/* Check for errors */ 
 		if(res != CURLE_OK){
-			fprintf(stderr, "curl_easy_perform() failed: %s\n",
-			curl_easy_strerror(res));
+			//fprintf(stderr, "curl_easy_perform() failed: %s\n",
+			//~ curl_easy_cleanup(curl);
+			//~ curl_easy_strerror(res));
 		}
 		
 		//Parse the string into JSON
@@ -110,21 +112,21 @@ void getState(){
 
 void stopActuator() {
 	printf("Stopping...\n");
-	pwmWrite(PWM_PIN, 0);
+	softPwmWrite(PWM_PIN, 0);
 }
 
 void retractActuator() {
 	stopActuator();
 	printf("Retracting...\n");
 	digitalWrite(DIRECTION_PIN, HIGH);
-	pwmWrite(PWM_PIN, 1024);
+	softPwmWrite(PWM_PIN, 100);
 }
 
 void extendActuator() {
 	stopActuator();
 	printf("Extending...\n");
 	digitalWrite(DIRECTION_PIN, LOW);
-	pwmWrite(PWM_PIN, 1024);
+	softPwmWrite(PWM_PIN, 100);
 }
 
 int main(int argc, char **argv) {
