@@ -6,19 +6,14 @@ This uses the WiringPi library.
 
 The app will also post the data to http://localhost:3000/weightsensor. Ensure that the `server.js` file in the main directory is running as well.
 
-Helper files:
+The `sensor.sh` file exports the necessary pins automatically, and starts the weight sensor program. You can start the program using `sudo bash sensor.sh`, though this script should start automatically (see the [startup files](./startup). 
 
-+ `sensor1.sh` - Runs application for sensor 1
-	+ VCC - pin 4
-	+ DAT - pin 10 (GPIO 15)
-	+ CLK - pin 12 (GPIO 18)
-	+ GND - pin 14
-
-+ `sensor2.sh` - Runs application for sensor 2
-	+ VCC - pin 2
-	+ DAT - pin 16 (GPIO 23)
-	+ CLK - pin 18 (GPIO 24)
-	+ GND - pin 20
+##Pin Setup
+Weight Sensor:
++ VCC - Physical Pin 2
++ DAT - Physical Pin 16 (GPIO 23)
++ CLK - Physical Pin 18 (GPIO 24)
++ GND - Physical Pin 20
 
 ** NOTE: Pins must be exported to work **
 
