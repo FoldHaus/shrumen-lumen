@@ -1,4 +1,5 @@
 #include <wiringPi.h>
+#include <signal.h>
 #include <stdio.h>
 #include <sched.h>
 #include <string.h>
@@ -82,27 +83,33 @@ void getState(){
 
 		/* Perform the request, res will get the return code */ 
 		res = curl_easy_perform(curl);
-		
+				
 		/* Check for errors */ 
 		if(res != CURLE_OK){
-			//fprintf(stderr, "curl_easy_perform() failed: %s\n",
-			//~ curl_easy_cleanup(curl);
-			//~ curl_easy_strerror(res));
-		}
-		
-		//Parse the string into JSON
-		cJSON * json = cJSON_Parse(s.ptr);
-		
-		//Get the state as an integer
-		state = cJSON_GetObjectItem(json, "state")->valueint;
-		
-		//Delete the JSON object and free the string
-		cJSON_Delete(json);
-		printf("New State: %d\n", state);
-		free(s.ptr);
-		
+			printf("Curl failed: %s.\n", curl_easy_strerror(res));
+		} else if(s.len == 0){
+			printf("Response is empty.\n");
+		} else {
+			printf("Server Response: %s\n", s.ptr);
+			//Parse the string into JSON
+			cJSON * json = cJSON_Parse(s.ptr);
+
+			if(json == NULL){
+				printf("JSON is null.\n");
+			} else {
+				//Get the state as an integer
+				state = cJSON_GetObjectItem(json, "state")->valueint;
+			
+				//Delete the JSON object and free the string
+				cJSON_Delete(json);
+				printf("New State: %d\n", state);
+				free(s.ptr);
+			}
+		}	
 		/* always cleanup */ 
 		curl_easy_cleanup(curl);
+	} else {
+		printf("Failed to set up curl.\n");
 	}
 	
 	//Cleanup the CURLs info globablly.
@@ -129,7 +136,18 @@ void extendActuator() {
 	softPwmWrite(PWM_PIN, 100);
 }
 
+void signalHandler(int signal){
+	printf("Handling signal: %d\n", signal);
+	printf("Retracting actuator...\n");
+	retractActuator();
+	delay(1000);
+	printf("Actuator Retracted. Ending program.\n");
+	exit(signal);
+}
+
 int main(int argc, char **argv) {
+
+	signal(SIGINT, signalHandler);
 
 	//Setup WiringPi w/ GPIO pins
 	if(wiringPiSetupGpio() == -1)
@@ -146,7 +164,7 @@ int main(int argc, char **argv) {
 		//~ Run CURL GET command
 		getState();
 		
-		printf("%d\n", state);
+		printf("Current state: %d\n", state);
 		if(state == 1) {
 			extendActuator();
 		}
