@@ -45,6 +45,10 @@
             <div style="font-size: 20px;" ng-if="shroom.actuator.state === 1">Extend</div>
             <div style="font-size: 20px;" ng-if="shroom.actuator.state === -1">Retract</div>
           </div>
+          <div class="status" style="text-align: center;">
+            <div style="font-size: 10px;">Weight Sensor:</div>
+            <div style="font-size: 20px;">{{ shroom.weightsensor.data }}</div>
+          </div>
         </div>
       </div>
     </div>
