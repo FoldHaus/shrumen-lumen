@@ -1,3 +1,5 @@
+#!/bin/bash
+
 command_exists() {
 	type "$1" &> /dev/null ;
 }
@@ -21,8 +23,16 @@ if command_exists node; then
 else
 	echo "  - Downloading and installing node..."
 	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-	sudo apt-get install -y nodejs npm
+	sudo apt-get install -y --force-yes nodejs npm
 	echo "  - Done installing node."
+fi
+
+if command_exists npm; then
+	echo " - NPM installed."
+else
+	echo " - NPM insallting..."
+	sudo apt-get install -y --force-yes npm
+	echo " - NPM insallted."
 fi
 
 echo "Setting up framebuffer for autostart..."
@@ -30,7 +40,7 @@ if command_exists Xvfb; then
 	echo "  - Already installed."
 else
 	echo "  - Installing xvfb..."
-	sudo apt-get install -y xvfb libxrender1 libxtst6 libxi6
+	sudo apt-get install -y --force-yes xvfb libxrender1 libxtst6 libxi6
 	echo "  - Done installing."
 fi
 
@@ -54,7 +64,7 @@ if [ -d ~/neopixel ]; then
 else
 	echo "  - Installing NeoPixel..."
 	sudo apt-get update
-	sudo apt-get install -y build-essential python-dev git scons swig
+	sudo apt-get install -y --force-yes build-essential python-dev git scons swig
 	echo "  - Getting library..."
 	git clone https://github.com/jgarff/rpi_ws281x.git ~/neopixel
 	pushd ~/neopixel

@@ -18,10 +18,11 @@ The cJSON files are included in the repo.
 
 Make sure to run `make` when changes are made. The Makefile links the cJSON, libcurl, and math libraries automatically.
 
-##Pins:
-DIR - GPIO 6
-PWM - GPIO 12
-GNG - GPIO 13 
+##Pins Setup:
+Linear Actuator:
++ PWM - Physical Pin 31 (GPIO 6)
++ DIR - Physical Pin 32 (GPIO 12)
++ GND - Physical Pin 34
 
 ** NOTE: Pins must be exported to work **
 
