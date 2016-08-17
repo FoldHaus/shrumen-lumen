@@ -1,0 +1,52 @@
+<!doctype html>
+<html ng-app="todoApp">
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js"></script>
+    <script src="shroom.js"></script>
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body>
+    <div style="text-align: center;">
+      <h2>ShroomUI</h2>
+    </div>
+    <div ng-controller="ShroomController as shroomUI" class="shroomsHolder">
+      <div style="font-size: 12px; font-weight: bold;">
+        SHROOM ACTIONS
+      </div>
+      <div style="padding: 20px 20px 40px 20px">
+        <button>Test Button</button>
+        <button>Test Button</button>
+        <button>Test Button</button>
+      </div>
+      <div style="font-size: 12px; font-weight: bold;">
+        SHROOM STATES
+      </div>
+      <div class="shroomDiv"
+        ng-repeat="shroom in shroomUI.shrooms track by $index"
+        ng-class="{ 'success': shroom.connected, 'error': !shroom.connected }">
+        <div class="header" style="text-align: center;">
+          <div style="border-bottom: 1px solid #999; padding: 10px;">Shroom {{ $index + 1 }}</div>
+          <div style="font-size: 10px; padding: 5px;">{{ shroom.ip }}</div>
+        </div>
+        <div ng-if="!shroom.connected" style="text-align: center; font-size: 12px; margin: 4px; background-color: #FF9999;">
+          NOT CONNECTED
+        </div>
+        <div ng-if="shroom.connected" style="text-align: center; font-size: 12px; margin: 4px; background-color: #99FF99;">
+          CONNECTED
+        </div>
+        <div ng-if="shroom.connected">
+          <div class="status" style="text-align: center;">
+            <div style="font-size: 10px;">State:</div>
+            <div style="font-size: 20px;">{{ shroom.data.state }}</div>
+          </div>
+          <div class="status" style="text-align: center;">
+            <div style="font-size: 10px;">Actuator:</div>
+            <div style="font-size: 20px;" ng-if="shroom.actuator.state === 0">Stopped</div>
+            <div style="font-size: 20px;" ng-if="shroom.actuator.state === 1">Extend</div>
+            <div style="font-size: 20px;" ng-if="shroom.actuator.state === -1">Retract</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

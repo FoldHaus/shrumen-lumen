@@ -1,0 +1,36 @@
+
+
+button {
+  background-color: #DDD;
+  border: 1px solid #999;
+  padding: 10px 20px;
+  border-radius: 5px;
+  margin: 0px 2vw;
+}
+
+button:hover {
+  background-color: #999;
+  cursor: pointer;
+}
+
+.shroomsHolder {
+  text-align: center;
+  margin: 0px auto;
+}
+
+.shroomDiv {
+  border: 1px solid #999;
+  display: inline-block;
+  vertical-align: top;
+  width: 10vw;
+  margin: 10px;
+  min-width: 130px;
+}
+
+.success {
+  background-color: #DDFFDD;
+}
+
+.error {
+  background-color: #FFDDDD;
+}
