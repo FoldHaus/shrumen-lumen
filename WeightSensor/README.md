@@ -10,7 +10,7 @@ The `sensor.sh` file exports the necessary pins automatically, and starts the we
 
 ##Pin Setup
 Weight Sensor:
-+ VCC - Physical Pin 2
++ VCC - Physical Pin 1
 + DAT - Physical Pin 16 (GPIO 23)
 + CLK - Physical Pin 18 (GPIO 24)
 + GND - Physical Pin 20

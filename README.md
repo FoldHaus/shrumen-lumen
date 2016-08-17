@@ -34,7 +34,7 @@ Respond _No_ to the following prompts.
 Connect each components into the following pins. If the connections are misplaced, the system will not function as expected.
 
 Weight Sensor:
-+ VCC - Physical Pin 2
++ VCC - Physical Pin 1 (3.3V)
 + DAT - Physical Pin 16 (GPIO 23)
 + CLK - Physical Pin 18 (GPIO 24)
 + GND - Physical Pin 20
