@@ -3,9 +3,9 @@
 Shrumen Lumen software.
 
 # Parts
-
 + [WeightSensor Application](./WeightSensor)
-
++ [Linear Actuator Application](./LinearActuator)
++ [Pad Lights Application](./PadLights)
 
 # RPi Setup Steps
 
@@ -29,6 +29,24 @@ Respond _No_ to the following prompts.
 + Update graphics: `sudo aptitude remove libgles2-mesa`
 + Install 'PixelPusher' Library
 + Install 'HTTP Requests for Processing' Library
+
+##Full Pin Reference
+Connect each components into the following pins. If the connections are misplaced, the system will not function as expected.
+
+Weight Sensor:
++ VCC - Physical Pin 2
++ DAT - Physical Pin 16 (GPIO 23)
++ CLK - Physical Pin 18 (GPIO 24)
++ GND - Physical Pin 20
+
+Linear Actuator:
++ PWM - Physical Pin 31 (GPIO 6)
++ DIR - Physical Pin 32 (GPIO 12)
++ GND - Physical Pin 34
+
+Pad Lights:
++ DAT: Physical Pin 12 (GPIO 18)
++ GND: Physical Pin 14
 
 <sup>References: [https://github.com/processing/processing/wiki/Raspberry-Pi](https://github.com/processing/processing/wiki/Raspberry-Pi)</sup>
 
