@@ -104,6 +104,11 @@ app.post('/weightsensor', function(req, res) {
 	res.sendStatus(200);
 });
 
+// A handler to retrieve data from the Weight Sensor Data
+app.get('/weightsensor', function(req, res) {
+	var data = weightSensorInterface.getRawData();
+	res.send( {data: data, time: new Date()} );
+});
 
 // A handler for data coming from the Linear Actuators
 app.get('/linearactuator', function(req, res) {
