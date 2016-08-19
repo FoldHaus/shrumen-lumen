@@ -117,6 +117,14 @@ app.get('/linearactuator', function(req, res) {
 	res.send( {state: linearActuatorState, time: new Date()} );
 });
 
+// A handler for data coming from the Linear Actuators
+app.post('/interaction', function(req, res) {
+	var interaction = req.body.interaction;
+	console.log("New Interaction Triggered: " + interaction);
+	linearActuatorInterface.handleWebInterfaceRequests();
+	res.sendStatus(200);
+});
+
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -42,12 +42,22 @@ class ShroomAPI {
     });
   }
 
+  triggerBasicInteraction() {
+    var self = this;
+    this.$http.post(this.ip + "/interaction", { interaction: "basic" }, {timeout: 1000}).then(function(data){
+      self.connected = true;
+      console.log("Triggered interaction on Shroom: " + this.ip)
+    }, function() {
+      self.connected = self.connected && false;
+    });
+  }
+
 }
 
 
 
 angular.module('todoApp', [])
-  .controller('ShroomController', function($http) {
+  .controller('ShroomController', function($http, $scope) {
     var self = this;
     this.ips = [
       'http://10.1.3.115:3000',
@@ -71,4 +81,11 @@ angular.module('todoApp', [])
         self.shrooms[shroom].updateState();
       }
     }, 500);
+
+    $scope.basicInteractionAll = function() {
+      for(var shroom in self.shrooms){
+        self.shrooms[shroom].triggerBasicInteraction();
+      }
+    }
+
   });
