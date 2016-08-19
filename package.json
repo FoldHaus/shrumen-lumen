@@ -24,7 +24,6 @@
     "lodash": "^4.15.0",
     "moment": "^2.14.1",
     "mustache": "^2.2.1",
-    "rainbowvis.js": "^1.0.1",
     "rpi-ws281x-native": "^0.8.1"
   }
 }
