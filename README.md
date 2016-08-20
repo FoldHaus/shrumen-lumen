@@ -34,14 +34,14 @@ Respond _No_ to the following prompts.
 Connect each components into the following pins. If the connections are misplaced, the system will not function as expected.
 
 Weight Sensor:
-+ VCC - Physical Pin 1 (3.3V)
++ VDD - Physical Pin 1 (3.3V)
 + DAT - Physical Pin 16 (GPIO 23)
 + CLK - Physical Pin 18 (GPIO 24)
 + GND - Physical Pin 20
 
 Linear Actuator:
-+ PWM - Physical Pin 31 (GPIO 6)
-+ DIR - Physical Pin 32 (GPIO 12)
++ DIR - Physical Pin 31 (GPIO 6)
++ PWM - Physical Pin 32 (GPIO 12)
 + GND - Physical Pin 34
 
 Pad Lights:
