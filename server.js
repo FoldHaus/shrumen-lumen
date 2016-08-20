@@ -120,7 +120,7 @@ app.get('/linearactuator', function(req, res) {
 // A handler for requests coming from the web interface
 app.post('/interaction', function(req, res) {
 	var interaction = req.body.interaction;
-	console.log("New Interaction Triggered: " + interaction);
+	console.log("New Interaction Request: " + interaction);
 	interactionController.handleInteractionRequests();
 	res.sendStatus(200);
 });
@@ -129,7 +129,7 @@ app.post('/interaction', function(req, res) {
 app.post('/safety', function(req, res) {
 	var signal = req.body.signal;
 	console.log("Safety Mode Triggered: " + signal);
-	interactionController.handleSafetyModeRequests();
+	interactionController.handleSafetyModeRequests(signal);
 	res.sendStatus(200);
 });
 

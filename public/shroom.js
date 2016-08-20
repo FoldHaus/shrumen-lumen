@@ -51,6 +51,26 @@ class ShroomAPI {
       self.connected = self.connected && false;
     });
   }
+  
+  triggerSafetyModeLock() {
+    var self = this;
+    this.$http.post(this.ip + "/safety", { signal: "lock" }, {timeout: 1000}).then(function(data){
+      self.connected = true;
+      console.log("Triggered safety mode on Shroom: " + this.ip)
+    }, function() {
+      self.connected = self.connected && false;
+    });
+  }
+  
+  triggerSafetyModeUnlock() {
+    var self = this;
+    this.$http.post(this.ip + "/safety", { signal: "unlock" }, {timeout: 1000}).then(function(data){
+      self.connected = true;
+      console.log("Turned off safety mode on Shroom: " + this.ip)
+    }, function() {
+      self.connected = self.connected && false;
+    });
+  }
 
 }
 
@@ -86,6 +106,18 @@ angular.module('todoApp', [])
     $scope.basicInteractionAll = function() {
       for(var shroom in self.shrooms){
         self.shrooms[shroom].triggerBasicInteraction();
+      }
+    }
+    
+    $scope.safetyModeOnAll = function() {
+      for(var shroom in self.shrooms){
+        self.shrooms[shroom].triggerSafetyModeLock();
+      }
+    }
+    
+    $scope.safetyModeOffAll = function() {
+      for(var shroom in self.shrooms){
+        self.shrooms[shroom].triggerSafetyModeUnlock();
       }
     }
 
