@@ -8,6 +8,7 @@ import com.heroicrobot.dropbit.registry.*;
 import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
 import com.heroicrobot.dropbit.devices.pixelpusher.Strip;
 import java.util.*;
+import gifAnimation.*;
 
 DeviceRegistry registry;
 
@@ -56,8 +57,13 @@ void getState() {
 
 Default df;
 Green gr;
+Gradient grad;
+ColorWipe cw;
+Concentric con;
+DotSwirl ds;
+PastelCircles pc;
 
-final int CAP_STRIP_LENGTH = 60;
+final int CAP_STRIP_LENGTH = 90;
 final int STEMP_STRIP_LENGTH = 240;
 
 final List<Integer> STEM_STRIPS = Arrays.asList(6, 7); 
@@ -67,11 +73,16 @@ void setup() {
   testObserver = new TestObserver();
   registry.addObserver(testObserver);
   colorMode(RGB, 255);
-  size(128, 12);
+  size(750, 100);
   frameRate(100);
   
   df = new Default();
-  gr = new Green();
+  grad = new Gradient();
+  cw = new ColorWipe();
+  con = new Concentric(this);
+  ds = new DotSwirl(this);
+  pc = new PastelCircles(this);
+  
 }
 
 void draw() {
@@ -98,9 +109,20 @@ void draw() {
         // Determine which state the animations should
         // be in.
         switch(state) {
-          case "test":
-            // Run test script
-            gr.display();
+          case "gradient":
+            grad.display();
+            break;
+          case "colorwipe":
+            cw.display();
+            break;
+          case "concentric":
+            con.display();
+            break;
+          case "dotswirl":
+            ds.display();
+            break;
+          case "pastelcircles":
+            pc.display();
             break;
           default:
             // Run default script
@@ -128,7 +150,7 @@ void draw() {
           }
           else {
             //Set the stem pixels to white
-            for (int i = 0; i < strip.getLength(); i++) {
+            for (int i = 0; i < strip.getLength(); i+=2) {
               color c = color(255, 255, 255);
               strip.setPixel(c, i);            
             }

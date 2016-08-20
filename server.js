@@ -37,7 +37,7 @@ var InteractionController = require("./lib/InteractionController.js");
 var interactionController = new InteractionController(weightSensorInterface, padInterface, linearActuatorInterface, animationsInterface);
 
 //Start animation loop and set and input value in minutes
-interactionController.startAnimationLoop(1);
+interactionController.startAnimationLoop(0.5);
 
 
 app.get('/state', function(req, res) {
