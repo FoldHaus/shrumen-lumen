@@ -117,13 +117,22 @@ app.get('/linearactuator', function(req, res) {
 	res.send( {state: linearActuatorState, time: new Date()} );
 });
 
-// A handler for data coming from the Linear Actuators
+// A handler for requests coming from the web interface
 app.post('/interaction', function(req, res) {
 	var interaction = req.body.interaction;
 	console.log("New Interaction Triggered: " + interaction);
-	interactionController.handleWebInterfaceRequests();
+	interactionController.handleInteractionRequests();
 	res.sendStatus(200);
 });
+
+// A handler for safety mode requests coming from web interface
+app.post('/safety', function(req, res) {
+	var signal = req.body.signal;
+	console.log("Safety Mode Triggered: " + signal);
+	interactionController.handleSafetyModeRequests();
+	res.sendStatus(200);
+});
+
 
 
 /// catch 404 and forward to error handler
