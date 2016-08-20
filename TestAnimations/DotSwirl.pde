@@ -1,11 +1,11 @@
 
-class LoopingGif {
-  Gif loopingGif;
+class DotSwirl {
+  Gif dotSwirl;
   
-  LoopingGif(TestAnimations applet) {
+  DotSwirl(TestAnimations applet) {
     //Put the file name of the gif as the second argument.
-    loopingGif = new Gif(applet, "rainbow.gif");
-    loopingGif.loop();
+    dotSwirl = new Gif(applet, "dotswirl-resized.gif");
+    dotSwirl.loop();
   }
   
   void display() {
@@ -13,10 +13,10 @@ class LoopingGif {
     background(0);
     
     //Change the GIF to fit inside the image
-    loopingGif.resize(width, height);
+    dotSwirl.resize(width, height);
     
     //Position the image
-    image(loopingGif, 0, 0);
+    image(dotSwirl, 0, 0);
   }
   
 }
