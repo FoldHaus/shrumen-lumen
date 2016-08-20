@@ -121,7 +121,7 @@ app.get('/linearactuator', function(req, res) {
 app.post('/interaction', function(req, res) {
 	var interaction = req.body.interaction;
 	console.log("New Interaction Triggered: " + interaction);
-	linearActuatorInterface.handleWebInterfaceRequests();
+	interactionController.handleWebInterfaceRequests();
 	res.sendStatus(200);
 });
 
