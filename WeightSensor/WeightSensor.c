@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 
 
   while(1){
-	usleep(1000 * 1000);
+	usleep(250 * 1000);
 	long sampl = read_cnt(offset, argc) / 10000;
 	if(sampl > samples[0] * 10){
 		sampl = read_cnt(offset, argc) / 10000;
