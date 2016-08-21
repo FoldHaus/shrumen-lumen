@@ -14,7 +14,7 @@ class NightSky {
     x = (x+5) % width;
     
     for (int i = 0; i < width; i++){
-      if (x %  == 0) {
+      if (x % 2 == 0) {
         fill(color(255,255,255));
         rect(x, x, 5, 5);
         fill(color(255,255,255));
