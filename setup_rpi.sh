@@ -115,4 +115,9 @@ else
         echo "  - Libcurl4 installed."
 fi
 
+echo "Initializing all services"
+sudo bash startup/start_service.sh
+
+
+
 
