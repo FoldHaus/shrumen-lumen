@@ -28,8 +28,15 @@ class Sweep {
     if(y == 0) {
       colorCount++;
     }
+    int yCoord = y - height;
+    setGradient(0, yCoord, width, height, lerpColor(c, black, .5), c);
+    if (yCoord < height/2) {
+      setGradient(0, yCoord + height, width, height, lerpColor(c, black, .5), c);
+    }
     
-    setGradient(0, y - height, width, height, black, c);
+    if (yCoord > height) {
+      setGradient(0, yCoord - height, width, height, lerpColor(c, black, .5), c);
+    }
   }
   
   void setGradient(int x, int y, float w, float h, color c1, color c2) {

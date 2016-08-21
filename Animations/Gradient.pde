@@ -5,6 +5,12 @@ class Gradient {
       {color(0, 0, 255), color(0, 255, 0)},
       //green to red
       {color(0, 255, 0), color(255, 0, 0)},
+       //red to pink
+      {color(255, 0, 0), color(255, 102, 255)},
+      //pink to orange
+      {color(255, 102, 255), color(255, 165, 0)},
+      //orange to red
+      {color(255, 165, 0), color(255, 0, 0)},
       //red to blue
       {color(255, 0, 0), color(0, 0, 255)}
     };
@@ -18,7 +24,7 @@ class Gradient {
   
   void display() {
     //Determine position in the lerp
-    float amt = (frameCount%1000)*0.001;
+    float amt = (frameCount%10000)*0.0001;
     
     //if framecount is zero, increment.
     //This increments on start

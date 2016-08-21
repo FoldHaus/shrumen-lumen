@@ -85,12 +85,7 @@ void setup() {
   df = new Default();
   grad = new Gradient();
   cw = new ColorWipe();
-  con = new Concentric(this);
-  ds = new DotSwirl(this);
   pc = new PastelCircles(this);
-  bwc = new BlackWhiteCircle(this);
-  bwt = new BlackWhiteTriangle(this);
-  os = new OuterSpace(this);
   tw = new Twinkles();
   ps = new Pulse();
   sw = new Sweep();
@@ -127,29 +122,17 @@ void draw() {
           case "colorwipe":
             cw.display();
             break;
-          case "concentric":
-            con.display();
-            break;
-          case "dotswirl":
-            ds.display();
-            break;
           case "pastelcircles":
             pc.display();
-            break;
-          case "blackwhitecircle":
-            bwt.display();
-            break;
-          case "blackwhitetriangle":
-            bwt.display();
-            break;
-          case "outerspace":
-            os.display();
             break;
           case "pulse":
             ps.display();
             break;
           case "sweep":
             sw.display();
+            break;
+          case "twinkles":
+            tw.display();
             break;
           default:
             // Run default script
@@ -177,7 +160,7 @@ void draw() {
           }
           else {
             //Set the stem pixels to white
-            for (int i = 0; i < strip.getLength(); i+=3) {
+            for (int i = 0; i < strip.getLength(); i+=4) {
               color c = color(255, 255, 255);
               strip.setPixel(c, i);            
             }
