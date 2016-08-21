@@ -62,6 +62,8 @@ ColorWipe cw;
 Concentric con;
 DotSwirl ds;
 PastelCircles pc;
+BlackWhiteCirle bwc;
+OuterSpace os;
 
 final int CAP_STRIP_LENGTH = 90;
 final int STEMP_STRIP_LENGTH = 240;
@@ -82,6 +84,9 @@ void setup() {
   con = new Concentric(this);
   ds = new DotSwirl(this);
   pc = new PastelCircles(this);
+  bwc = new BlackWhiteCircle(this);
+  bwt = new BlackWhiteTriangle(this);
+  os = new OuterSpace(this);
   
 }
 
