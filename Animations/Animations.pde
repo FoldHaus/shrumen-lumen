@@ -139,7 +139,7 @@ void draw() {
           if(!STEM_STRIPS.contains(strip.getStripNumber())) { 
             int xscale = width / CAP_STRIP_LENGTH;
             
-            for (int stripx = 0; stripx < strip.getLength(); stripx++) {
+            for (int stripx = 0; stripx < strip.getLength(); stripx += 2) {
                 x = stripx*xscale + 1;
                 y = stripy*yscale + 1; 
                 color c = get(x, y);
@@ -150,7 +150,7 @@ void draw() {
           }
           else {
             //Set the stem pixels to white
-            for (int i = 0; i < strip.getLength(); i+=2) {
+            for (int i = 0; i < strip.getLength(); i+=3) {
               color c = color(255, 255, 255);
               strip.setPixel(c, i);            
             }

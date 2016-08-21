@@ -66,6 +66,15 @@ app.get('/linearactuator', function(req, res) {
 });
 
 
+// A handler for data coming from the Linear Actuators
+app.get('/pad', function(req, res) {
+	var padState = padInterface.getPadState();
+	console.log("Pad State: " + padState);
+	res.send( {state: padState, time: new Date()} );
+});
+
+
+
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found!');

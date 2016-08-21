@@ -19,6 +19,6 @@ export DISPLAY=":2"
 
 #Automatically Run Scripts for Shrumen Lumen
 echo "Start the processing script..."
-processing-java --sketch=/home/pi/Desktop/pi-server/server_test --run
+processing-java --sketch=/home/pi/Desktop/pi-server/Animations --run
 exit 0
 
