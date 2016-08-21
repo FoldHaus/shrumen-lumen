@@ -2,8 +2,7 @@ import java.util.*;
 import gifAnimation.*;
 
 // Make a variable for your class here.
-Green gr;
-LoopingGif loopingGif;
+NightSky gr;
 
 void setup() {
   colorMode(RGB, 255);
@@ -11,7 +10,7 @@ void setup() {
   frameRate(100);
   
   //Instantiate your class object here
-  gr = new Green();
+  gr = new NightSky();
   
   //An example of how to add a Gif class
   //loopingGif = new LoopingGif(this);
