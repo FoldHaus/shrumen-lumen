@@ -62,8 +62,12 @@ ColorWipe cw;
 Concentric con;
 DotSwirl ds;
 PastelCircles pc;
-BlackWhiteCirle bwc;
+BlackWhiteCircle bwc;
+BlackWhiteTriangle bwt;
 OuterSpace os;
+Twinkles tw;
+Pulse ps;
+Sweep sw;
 
 final int CAP_STRIP_LENGTH = 90;
 final int STEMP_STRIP_LENGTH = 240;
@@ -87,6 +91,9 @@ void setup() {
   bwc = new BlackWhiteCircle(this);
   bwt = new BlackWhiteTriangle(this);
   os = new OuterSpace(this);
+  tw = new Twinkles();
+  ps = new Pulse();
+  sw = new Sweep();
   
 }
 
@@ -128,6 +135,21 @@ void draw() {
             break;
           case "pastelcircles":
             pc.display();
+            break;
+          case "blackwhitecircle":
+            bwt.display();
+            break;
+          case "blackwhitetriangle":
+            bwt.display();
+            break;
+          case "outerspace":
+            os.display();
+            break;
+          case "pulse":
+            ps.display();
+            break;
+          case "sweep":
+            sw.display();
             break;
           default:
             // Run default script

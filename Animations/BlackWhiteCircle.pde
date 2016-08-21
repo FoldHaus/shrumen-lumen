@@ -1,7 +1,7 @@
 class BlackWhiteCircle {
   Gif gif;
   
-  BlackWhiteCircle(TestAnimations applet) {
+  BlackWhiteCircle(Animations applet) {
     gif = new Gif(applet, "bwcircle.gif");
     gif.loop();
   }

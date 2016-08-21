@@ -1,7 +1,7 @@
 class OuterSpace {
   Gif gif;
   
-  OuterSpace(TestAnimations applet) {
+  OuterSpace(Animations applet) {
     gif = new Gif(applet, "thruspace.gif");
     gif.loop();
   }

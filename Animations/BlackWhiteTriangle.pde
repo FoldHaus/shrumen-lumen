@@ -1,7 +1,7 @@
 class BlackWhiteTriangle {
   Gif gif;
   
-  BlackWhiteTriangle(TestAnimations applet) {
+  BlackWhiteTriangle(Animations applet) {
     gif = new Gif(applet, "bwtriangle.gif");
     gif.loop();
   }
