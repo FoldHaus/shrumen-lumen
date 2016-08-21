@@ -116,7 +116,7 @@ else
 fi
 
 echo "Initializing all services"
-sudo bash startup/start_service.sh
+sudo bash /home/pi/Desktop/pi-server/startup/start_services.sh
 
 
 
