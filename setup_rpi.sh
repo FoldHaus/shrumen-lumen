@@ -27,6 +27,16 @@ else
         echo "  - PixelPusher library for Processing installed."
 fi
 
+echo "Installing GifAnimation library for Processing..."
+if [-d /home/pi/sketchbook/libraries/GifAnimation]; then
+        echo "  - GifAnimation library already installed."
+else
+        echo "  - Downloading and installing..."
+	mkdir/home/pi/sketchbook/libraries/GifAnimation
+        git clone https://github.com/01010101/GifAnimation.git /home/pi/sketchbook/libraries/GifAnimation
+        echo "  - GifAnimation library for Processing installed."
+fi
+
 echo "Setting up node..."
 if command_exists node; then
 	echo "  - Node already installed."
@@ -104,4 +114,5 @@ else
 	sudo apt-get install -y --force-yes libcurl4-openssl-dev
         echo "  - Libcurl4 installed."
 fi
+
 
