@@ -6,6 +6,11 @@ command_exists() {
 
 echo "Starting setup..."
 
+echo "Setting Git global email and name"
+git config --global user.email "bomanimcclendon2017@u.northwestern.edu"
+git config --global user.name "Bomani McClendon"
+
+
 echo "Installing Processing..."
 if command_exists processing; then
 	echo "  - Processing already installed."
