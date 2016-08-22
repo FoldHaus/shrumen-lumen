@@ -42,17 +42,16 @@ if command_exists node; then
 	echo "  - Node already installed."
 else
 	echo "  - Downloading and installing node..."
-	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
 	sudo apt-get install -y --force-yes nodejs
 	echo "  - Done installing node."
 fi
 
-if command_exists npm; then
-	echo " - NPM installed."
+echo "Install NPM modules"
+if command_exists node; then
+	npm install
 else
-	echo " - NPM insallting..."
-	sudo apt-get install -y --force-yes npm
-	echo " - NPM insallted."
+	echo "NPM isn't installed"
 fi
 
 echo "Setting up framebuffer for autostart..."
