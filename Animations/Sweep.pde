@@ -1,12 +1,18 @@
 class Sweep {
   int black = color(0, 0, 0);
   int[][] colorArr = {
-    //blue to green
-    {color(0, 0, 255), color(0, 255, 0)},
-    //green to red
-    {color(0, 255, 0), color(255, 0, 0)},
-    //red to blue
-    {color(255, 0, 0), color(0, 0, 255)}
+    //red to pink
+    {color(255, 0, 0), color(233, 0, 50)},
+    //pink to purple
+    {color(233, 0, 50), color(233, 0, 255)},
+    //purple to blue
+    {color(233, 0, 255), color(0, 0, 255)},
+    //blue to purple 
+    {color(0, 0, 255), color(233, 0, 255)},
+    //pruple to pink
+    {color(233, 0, 255), color(233, 0, 50)},
+    //pink to red
+    {color(233, 0, 50), color(255, 0, 0)},
   };
   int colorCount = 0;
   int y;
@@ -16,14 +22,14 @@ class Sweep {
     fill(black);
     rect(0, 0, width, height);
     
-    float amt = float(y)/float(height);
+    float amt = 0.5*(float(y)/float(height));
     
     color startColor = colorArr[colorCount % colorArr.length][0];
     color endColor = colorArr[colorCount % colorArr.length][1];
     color c = lerpColor(startColor, endColor, amt);
     println(amt);
     
-    y = (y+1) % height;
+    y = ((y+1)) % height;
     
     if(y == 0) {
       colorCount++;

@@ -1,12 +1,15 @@
 class ColorWipe {
   int[] colorArr = {
-    color(22, 160, 133),
-    color(26, 188, 156),
-    color(46, 204, 113),
-    color(231, 76, 60),
-    color(230, 126, 34),
-    color(243, 156, 18),
-    color(241, 196, 15)
+    //Dark red to blue
+    color(255, 55, 5),
+    color(0, 120, 255),
+    //Blue to green
+    color(142, 14, 204),
+    color(17, 120, 69),
+    // Green to purple
+    color(0, 255, 255),
+    color(255, 255, 0),
+    //color(241, 196, 15)
   };
   
   int x;

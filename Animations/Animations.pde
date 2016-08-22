@@ -56,18 +56,12 @@ void getState() {
 }
 
 Default df;
-Green gr;
 Gradient grad;
 ColorWipe cw;
-Concentric con;
-DotSwirl ds;
-PastelCircles pc;
-BlackWhiteCircle bwc;
-BlackWhiteTriangle bwt;
-OuterSpace os;
 Twinkles tw;
 Pulse ps;
 Sweep sw;
+Bubbles b;
 
 final int CAP_STRIP_LENGTH = 90;
 final int STEMP_STRIP_LENGTH = 240;
@@ -85,11 +79,10 @@ void setup() {
   df = new Default();
   grad = new Gradient();
   cw = new ColorWipe();
-  pc = new PastelCircles(this);
   tw = new Twinkles();
   ps = new Pulse();
   sw = new Sweep();
-  
+  b = new Bubbles();
 }
 
 void draw() {
@@ -122,9 +115,6 @@ void draw() {
           case "colorwipe":
             cw.display();
             break;
-          case "pastelcircles":
-            pc.display();
-            break;
           case "pulse":
             ps.display();
             break;
@@ -133,6 +123,9 @@ void draw() {
             break;
           case "twinkles":
             tw.display();
+            break;
+          case "bubbles":
+            b.display();
             break;
           default:
             // Run default script
