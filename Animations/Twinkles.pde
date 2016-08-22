@@ -3,7 +3,7 @@ class Twinkles {
   int[] colorArr = {
     color(255,255,255)
   };
-  int maxTwinkles = 3;
+  int maxTwinkles = 2;
   
   ArrayList<Twinkle> twinkleList = new ArrayList<Twinkle>();
   Random rand = new Random();
@@ -16,7 +16,7 @@ class Twinkles {
     float amt = (frameCount%1000)*0.01;
     
     if (twinkleList.size() < maxTwinkles && rand.nextInt(10) == 1) {
-      twinkleList.add(new Twinkle(rand.nextInt(width), rand.nextInt(height), 70, 70, colorArr[rand.nextInt(colorArr.length)], 200));
+      twinkleList.add(new Twinkle(rand.nextInt(width), rand.nextInt(height), 50, 50, colorArr[rand.nextInt(colorArr.length)], 2000));
     }
     
     for (int i = 0; i < twinkleList.size(); i++) {

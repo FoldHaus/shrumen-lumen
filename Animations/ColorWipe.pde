@@ -11,8 +11,8 @@ class ColorWipe {
     color(255, 255, 0),
     //color(241, 196, 15)
   };
-  
-  int x;
+   
+  float x;
   int colorCount;
   ColorWipe() {
    x = 0;
@@ -20,10 +20,12 @@ class ColorWipe {
   }
   
   void display() {
+    
+    background(color(255, 55, 5));
     //float amt = (frameCount%1000)*0.001;
     
    
-    x = (x+5) % width;
+    x = (x+0.1) % width;
     
     if(x == 0) {
       colorCount++;

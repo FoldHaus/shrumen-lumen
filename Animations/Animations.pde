@@ -62,6 +62,7 @@ Twinkles tw;
 Pulse ps;
 Sweep sw;
 Bubbles b;
+BubblesGold bg;
 
 final int CAP_STRIP_LENGTH = 90;
 final int STEMP_STRIP_LENGTH = 240;
@@ -83,6 +84,7 @@ void setup() {
   ps = new Pulse();
   sw = new Sweep();
   b = new Bubbles();
+  bg = new BubblesGold();
 }
 
 void draw() {
@@ -126,6 +128,9 @@ void draw() {
             break;
           case "bubbles":
             b.display();
+            break;
+          case "bubblesgold":
+            bg.display();
             break;
           default:
             // Run default script

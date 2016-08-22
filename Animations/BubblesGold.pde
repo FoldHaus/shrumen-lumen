@@ -1,8 +1,8 @@
-class Bubbles {
+class BubblesGold {
   int[][] colorArr = {
     //green to dark green
-    {color(255,0,255), color(120,0,255)},
-    {color(120,0,255), color(255,0,255)},
+    {color(255, 30, 5), color(255, 55, 5)},
+    {color(255, 55, 5), color(255, 30, 5)},
     //dark green to black
     //{color(0,14,250), color(0,14,255)}
     //black to green
@@ -14,7 +14,7 @@ class Bubbles {
   
   Bubble bubble = new Bubble(50, 50, 70, 70, color(10,10,10), 1, 50);
    
-  Bubbles() {
+  BubblesGold() {
     colorCount = 0; 
   }
   
@@ -56,37 +56,5 @@ class Bubbles {
     if (yOffset > height - bubble.getWidth()) {
       ellipse(xOffset, yOffset - height, bubble.getWidth(), bubble.getHeight());
     }
-  }
-}
-
-class Bubble extends Circle {
-  int speed;
-  int lowerBound;
-  int upperBound;
-  int direction;
-  float weight;
-  Random rand = new Random();
-  
-  Bubble(int x, int y, int w, int h, int c, int spd, int wiggle) {
-    super(x, y, w, h, c);
-    speed = spd;
-    lowerBound = y - wiggle/2;
-    upperBound = y + wiggle/2;
-    direction = 1;
-  }
-  
-  int getY() {
-    // "wiggling"
-    if (this.rand.nextInt(50) == 1) {
-      direction *= -1;
-    }
-    this.yOffset += direction;
-    return floor(this.yOffset/10);
-  }
-  
-  int getX() {
-    // floating "up"
-    this.xOffset += this.speed;
-    return floor(this.xOffset/10);
   }
 }

@@ -2,7 +2,7 @@ import java.util.*;
 import gifAnimation.*;
 
 // Make a variable for your class here.
-Fall gr;
+Twinkles gr;
 
 void setup() {
   colorMode(RGB, 255);
@@ -10,7 +10,7 @@ void setup() {
   frameRate(100);
   
   //Instantiate your class object here
-  gr = new Fall();
+  gr = new Twinkles();
   
   //An example of how to add a Gif class
   //loopingGif = new LoopingGif(this);

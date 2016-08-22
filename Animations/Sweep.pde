@@ -15,26 +15,26 @@ class Sweep {
     {color(233, 0, 50), color(255, 0, 0)},
   };
   int colorCount = 0;
-  int y;
+  float y;
   
   void display() {
     noStroke();
     fill(black);
     rect(0, 0, width, height);
     
-    float amt = 0.5*(float(y)/float(height));
+    float amt = 0.5*(y/float(height));
     
     color startColor = colorArr[colorCount % colorArr.length][0];
     color endColor = colorArr[colorCount % colorArr.length][1];
     color c = lerpColor(startColor, endColor, amt);
     println(amt);
     
-    y = ((y+1)) % height;
+    y = (((y+0.1)) % height);
     
-    if(y == 0) {
+    if(amt < 0.0004) {
       colorCount++;
     }
-    int yCoord = y - height;
+    float yCoord = y - height;
     setGradient(0, yCoord, width, height, lerpColor(c, black, .5), c);
     if (yCoord < height/2) {
       setGradient(0, yCoord + height, width, height, lerpColor(c, black, .5), c);
@@ -45,10 +45,10 @@ class Sweep {
     }
   }
   
-  void setGradient(int x, int y, float w, float h, color c1, color c2) {
+  void setGradient(int x, float y, float w, float h, color c1, color c2) {
     noFill();
     // https://processing.org/examples/lineargradient.html
-    for (int i = y; i <= y+h; i++) {
+    for (int i = floor(y); i <= y+h; i++) {
       float inter = map(i, y, y+h, 0, 1);
       color c = lerpColor(c1, c2, inter);
       stroke(c);

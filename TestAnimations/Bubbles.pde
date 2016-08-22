@@ -1,17 +1,18 @@
 class Bubbles {
   int[][] colorArr = {
     //green to dark green
-    {color(7,249,162), color(10,137,103)},
+    {color(255,0,255), color(120,0,255)},
+    {color(120,0,255), color(255,0,255)},
     //dark green to black
-    {color(10,137,103), color(13,25,43)},
+    //{color(0,14,250), color(0,14,255)}
     //black to green
-    {color(13,25,43), color(7,249,162)}
+    //{color(13,25,43), color(7,249,162)}
   };
   
   int colorCount;
   int emptyEllipses;
   
-  Bubble bubble = new Bubble(50, 50, 50, 50, color(7,249,162), 1, 50);
+  Bubble bubble = new Bubble(50, 50, 70, 70, color(10,10,10), 1, 50);
    
   Bubbles() {
     colorCount = 0; 
@@ -34,12 +35,14 @@ class Bubbles {
     fill(c);
     rect(0, 0, width, height);
     
-    color ellipseStartColor = colorArr[(colorCount + 1) % colorArr.length][0];
-    color ellipseEndColor = colorArr[(colorCount + 1) % colorArr.length][1];
-    color ellipseColor = lerpColor(ellipseStartColor, ellipseEndColor, amt);
+    //color ellipseStartColor = colorArr[(colorCount + 1) % colorArr.length][0];
+    color ellipseStartColor = color(10,10,10);
+    //color ellipseEndColor = colorArr[(colorCount + 1) % colorArr.length][1];
+    color ellipseEndColor = color(20,20,20);
+    //color ellipseColor = lerpColor(ellipseStartColor, ellipseEndColor, amt);
+    color ellipseColor = color(255,255,255);
     
-    fill(ellipseColor, 100);
-    tint(255, 127);
+    fill(ellipseColor);
      
     int xOffset = bubble.getX() % width;
     int yOffset = bubble.getY() % height;
@@ -78,12 +81,12 @@ class Bubble extends Circle {
       direction *= -1;
     }
     this.yOffset += direction;
-    return this.yOffset;
+    return floor(this.yOffset/10);
   }
   
   int getX() {
     // floating "up"
     this.xOffset += this.speed;
-    return this.xOffset;
+    return floor(this.xOffset/10);
   }
 }

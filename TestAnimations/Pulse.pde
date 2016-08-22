@@ -17,7 +17,7 @@ class Pulse {
     fill(black);
     rect(0, 0, width, height);
     
-    float amt = (frameCount%1000)*0.01;
+    float amt = (frameCount%10000)*0.001;
     xOffset1 = ((int)(amt * width) % (2*width));
     xOffset2 = (xOffset1 + width) % (2*width);
     setGradient(xOffset1 - width, 0, width, height, black, colorArr[c1%colorArr.length], 20.);
