@@ -6,6 +6,11 @@ command_exists() {
 
 echo "Starting setup..."
 
+echo "Setting Git global email and name"
+git config --global user.email "bomanimcclendon2017@u.northwestern.edu"
+git config --global user.name "Bomani McClendon"
+
+
 echo "Installing Processing..."
 if command_exists processing; then
 	echo "  - Processing already installed."
@@ -17,22 +22,41 @@ else
 	echo "  - Processing installed."
 fi
 
+echo "Installing PixelPusher library for Processing..."
+if [-d /home/pi/sketchbook/libraries/PixelPusher]; then
+        echo "  - PixelPusher library already installed."
+else
+        echo "  - Downloading and installing..."
+	mkdir/home/pi/sketchbook/libraries/PixelPusher
+        git clone https://github.com/robot-head/PixelPusher-java.git /home/pi/sketchbook/libraries/PixelPusher
+        echo "  - PixelPusher library for Processing installed."
+fi
+
+echo "Installing GifAnimation library for Processing..."
+if [-d /home/pi/sketchbook/libraries/GifAnimation]; then
+        echo "  - GifAnimation library already installed."
+else
+        echo "  - Downloading and installing..."
+	mkdir/home/pi/sketchbook/libraries/GifAnimation
+        git clone https://github.com/01010101/GifAnimation.git /home/pi/sketchbook/libraries/GifAnimation
+        echo "  - GifAnimation library for Processing installed."
+fi
+
 echo "Setting up node..."
 if command_exists node; then
 	echo "  - Node already installed."
 else
 	echo "  - Downloading and installing node..."
-	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
-	sudo apt-get install -y --force-yes nodejs npm
+	curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
+	sudo apt-get install -y --force-yes nodejs
 	echo "  - Done installing node."
 fi
 
-if command_exists npm; then
-	echo " - NPM installed."
+echo "Install NPM modules"
+if command_exists node; then
+	npm install
 else
-	echo " - NPM insallting..."
-	sudo apt-get install -y --force-yes npm
-	echo " - NPM insallted."
+	echo "NPM isn't installed"
 fi
 
 echo "Setting up framebuffer for autostart..."
@@ -84,3 +108,20 @@ npm install nan
 node-gyp rebuild
 popd
 echo "Set up NeoPixel library."
+
+echo "Installing Libcurl..."
+if echo ldconfig -p | grep libcurl.so.4;  then
+        echo "  - Libcurl4 already installed."
+else
+        echo "  - Downloading and installing..."
+        sudo apt-get update
+	sudo apt-get install -y --force-yes libcurl4-openssl-dev
+        echo "  - Libcurl4 installed."
+fi
+
+echo "Initializing all services"
+sudo bash /home/pi/Desktop/pi-server/startup/start_services.sh
+
+
+
+

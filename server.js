@@ -2,7 +2,6 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
 var mustache = require('mustache');
-var Rainbow = require('rainbowvis.js');
 
 var app = express();
 
@@ -29,62 +28,22 @@ var padInterface = new PadInterface(60);
 var LinearActuatorInterface = require("./lib/LinearActuatorInterface.js");
 var linearActuatorInterface = new LinearActuatorInterface();
 
+//Add a module containing a class for interacting with the Animations
+var AnimationsInterface = require('./lib/AnimationsInterface.js');
+var animationsInterface = new AnimationsInterface();
+
 //Add a module containing a class for interacting with the LinearActuator
 var InteractionController = require("./lib/InteractionController.js");
-var interactionController = new InteractionController(weightSensorInterface, padInterface, linearActuatorInterface);
+var interactionController = new InteractionController(weightSensorInterface, padInterface, linearActuatorInterface, animationsInterface);
 
-// Module for setting animation state
-var setState = require('./lib/setState.js');
+//Start animation loop and set and input value in minutes
+interactionController.startAnimationLoop(1);
 
-var step = 0;
-
-const ledsPerStripCountCap = 90;
-const ledsPerStripCountStem = 240;
-
-const ledStripsInCap = 6;
-const ledStripsInStem = 2;
-
-const numColorsInRainbow = 400;
-
-var capRainbow = new Rainbow();
-capRainbow.setNumberRange(1, numColorsInRainbow);
-capRainbow.setSpectrum('blue', 'purple', 'blue');
-
-var stemRainbow = new Rainbow();
-stemRainbow.setNumberRange(1, numColorsInRainbow);
-stemRainbow.setSpectrum('white', 'white', 'white');
-
-var testStep = 0;
-var testColors = [
-			['blue', 'green', 'red'], 
-			['red', 'yellow', 'blue'],
-			['blue', 'orange', 'green'],
-			['green', 'white', 'blue']]
-			
-
-
-function getFrame(step) {
-	var frame = {
-		cap: {},
-		stem: {}
-	};
-
-	var baseArrayStem = new Array(ledsPerStripCountStem).fill(0);
-
-	for(var i = 0; i < ledStripsInCap; i++) {	
-		var baseArrayCap = new Array(ledsPerStripCountCap).fill(capRainbow.colourAt(step));
-		frame.cap[i] = baseArrayCap
-	}	
-
-	for(var i = 0; i < ledStripsInStem; i++) {	
-		var baseArrayStem = new Array(ledsPerStripCountStem).fill(stemRainbow.colourAt(step));
-		frame.stem[i] = baseArrayStem
-	}
-	return frame;
-}
 
 app.get('/state', function(req, res) {
-	res.send(setState("test"));
+	var currentState = animationsInterface.getState();
+
+	res.send({state: currentState});
 });
 
 // A handler for data coming from the Weight Sensor Data
@@ -105,6 +64,15 @@ app.get('/linearactuator', function(req, res) {
 	console.log("Linear Actuator State: " + linearActuatorState);
 	res.send( {state: linearActuatorState, time: new Date()} );
 });
+
+
+// A handler for data coming from the Linear Actuators
+app.get('/pad', function(req, res) {
+	var padState = padInterface.getPadState();
+	console.log("Pad State: " + padState);
+	res.send( {state: padState, time: new Date()} );
+});
+
 
 
 /// catch 404 and forward to error handler

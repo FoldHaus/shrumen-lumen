@@ -8,6 +8,7 @@ import com.heroicrobot.dropbit.registry.*;
 import com.heroicrobot.dropbit.devices.pixelpusher.Pixel;
 import com.heroicrobot.dropbit.devices.pixelpusher.Strip;
 import java.util.*;
+import gifAnimation.*;
 
 DeviceRegistry registry;
 
@@ -51,12 +52,19 @@ void getState() {
   }
  
   state = animationState;
+  println("STATE: " + state);
 }
 
 Default df;
-Green gr;
+Gradient grad;
+ColorWipe cw;
+Twinkles tw;
+Pulse ps;
+Sweep sw;
+Bubbles b;
+BubblesGold bg;
 
-final int CAP_STRIP_LENGTH = 60;
+final int CAP_STRIP_LENGTH = 90;
 final int STEMP_STRIP_LENGTH = 240;
 
 final List<Integer> STEM_STRIPS = Arrays.asList(6, 7); 
@@ -66,11 +74,17 @@ void setup() {
   testObserver = new TestObserver();
   registry.addObserver(testObserver);
   colorMode(RGB, 255);
-  size(128, 12);
+  size(750, 100);
   frameRate(100);
   
   df = new Default();
-  gr = new Green();
+  grad = new Gradient();
+  cw = new ColorWipe();
+  tw = new Twinkles();
+  ps = new Pulse();
+  sw = new Sweep();
+  b = new Bubbles();
+  bg = new BubblesGold();
 }
 
 void draw() {
@@ -96,11 +110,27 @@ void draw() {
         
         // Determine which state the animations should
         // be in.
-        println("STATE: " + state);
         switch(state) {
-          case "test":
-            // Run test script
-            gr.display();
+          case "gradient":
+            grad.display();
+            break;
+          case "colorwipe":
+            cw.display();
+            break;
+          case "pulse":
+            ps.display();
+            break;
+          case "sweep":
+            sw.display();
+            break;
+          case "twinkles":
+            tw.display();
+            break;
+          case "bubbles":
+            b.display();
+            break;
+          case "bubblesgold":
+            bg.display();
             break;
           default:
             // Run default script
@@ -112,10 +142,12 @@ void draw() {
         //Apply the color value to the pixels in the strips
         int yscale = height / (strips.size() - STEM_STRIPS.size());
         for(Strip strip : strips) {
+          
           //Check if the strip is a stem strip or a cap strip
           if(!STEM_STRIPS.contains(strip.getStripNumber())) { 
             int xscale = width / CAP_STRIP_LENGTH;
-            for (int stripx = 0; stripx < strip.getLength(); stripx++) {
+            
+            for (int stripx = 0; stripx < strip.getLength(); stripx += 2) {
                 x = stripx*xscale + 1;
                 y = stripy*yscale + 1; 
                 color c = get(x, y);
@@ -125,8 +157,8 @@ void draw() {
             stripy++;
           }
           else {
-            //Set all the stem pixels to white
-            for (int i = 0; i < strip.getLength(); i++) {
+            //Set the stem pixels to white
+            for (int i = 0; i < strip.getLength(); i+=4) {
               color c = color(255, 255, 255);
               strip.setPixel(c, i);            
             }
