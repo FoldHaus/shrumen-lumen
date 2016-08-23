@@ -134,7 +134,7 @@ void draw() {
             break;
           default:
             // Run default script
-            df.display();
+            ps.display();
             break;
             
         }
