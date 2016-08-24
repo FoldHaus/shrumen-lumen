@@ -8,32 +8,34 @@ class ColorWipe {
     color(17, 120, 69),
     // Green to purple
     color(0, 255, 255),
-    color(255, 255, 0),
-    //color(241, 196, 15)
+    color(255, 255, 0)
   };
    
   float x;
   int colorCount;
   ColorWipe() {
    x = 0;
-   colorCount = 0;
+   colorCount = 1;
   }
   
   void display() {
     
-    background(color(255, 55, 5));
+    background(colorArr[(colorCount-1) % colorArr.length]);
     //float amt = (frameCount%1000)*0.001;
-    
-   
-    x = (x+0.1) % width;
-    
-    if(x == 0) {
-      colorCount++;
-    }
     
     color c = colorArr[colorCount % colorArr.length];
     fill(c);
     rect(0, 0, x, height);
+   
+    x = (x+0.1) % width;
+    //println(colorCount);
+    
+    if(x < 0.1) {
+      
+      colorCount++;
+    }
+    
+    
   }
   
 }

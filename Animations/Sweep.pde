@@ -15,25 +15,22 @@ class Sweep {
     {color(233, 0, 50), color(255, 0, 0)},
   };
   int colorCount = 0;
-  float y;
+  float incrementAmt = 0.1;
+  float y, yOld;
   
   void display() {
     noStroke();
     fill(black);
     rect(0, 0, width, height);
     
-    float amt = 0.5*(y/float(height));
-    
+    float amt = (y/float(height));
+
     color startColor = colorArr[colorCount % colorArr.length][0];
     color endColor = colorArr[colorCount % colorArr.length][1];
     color c = lerpColor(startColor, endColor, amt);
     println(amt);
     
-    y = (((y+0.1)) % height);
     
-    if(amt < 0.0004) {
-      colorCount++;
-    }
     float yCoord = y - height;
     setGradient(0, yCoord, width, height, lerpColor(c, black, .5), c);
     if (yCoord < height/2) {
@@ -42,6 +39,12 @@ class Sweep {
     
     if (yCoord > height) {
       setGradient(0, yCoord - height, width, height, lerpColor(c, black, .5), c);
+    }
+    yOld = y;
+    y = (((y+incrementAmt)) % height);
+    
+    if(abs(y - yOld) > incrementAmt * 2) {
+      colorCount++;
     }
   }
   
