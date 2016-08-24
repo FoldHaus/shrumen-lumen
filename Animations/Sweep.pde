@@ -28,7 +28,6 @@ class Sweep {
     color startColor = colorArr[colorCount % colorArr.length][0];
     color endColor = colorArr[colorCount % colorArr.length][1];
     color c = lerpColor(startColor, endColor, amt);
-    println(amt);
     
     
     float yCoord = y - height;
