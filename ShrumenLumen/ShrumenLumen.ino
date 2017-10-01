@@ -6,7 +6,13 @@ int speedPWMPin = 23;
 const int padPin = 2;
 const int ledPin =  13;
 
-// Other Variable Definitions
+// Animation Timings
+long extensionTime = 15000;
+long retractionTime = 15000;
+long freezeTime = 30000;
+long refreshTime = 30000;
+
+// State Variables
 int padState = 0;
 
 // Class Instantiations
@@ -15,7 +21,6 @@ MotorController motorController(directionDigitalPin, speedPWMPin);
 void setup() {
   pinMode(ledPin, OUTPUT); 
   pinMode(padPin, INPUT);  
-  
   analogWrite(speedPWMPin, 0); 
 }
 
@@ -24,11 +29,28 @@ void loop() {
 
   if (padState == HIGH) {         
     digitalWrite(ledPin, HIGH); 
-    motorController.extend(); 
-    
+    animate();
   } 
   else {
     digitalWrite(ledPin, LOW); 
-    motorController.retract();
+    motorController.freeze();
   }
+}
+
+void animate() { 
+  motorController.extend(); 
+  digitalWrite(ledPin, HIGH); 
+  delay(extensionTime);
+  
+  motorController.freeze(); 
+  digitalWrite(ledPin, LOW); 
+  delay(freezeTime);
+  
+  motorController.retract();
+  digitalWrite(ledPin, HIGH); 
+  delay(retractionTime);
+
+  motorController.freeze();
+  digitalWrite(ledPin, LOW); 
+  delay(refreshTime);
 }

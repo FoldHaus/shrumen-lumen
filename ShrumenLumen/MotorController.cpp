@@ -25,13 +25,11 @@ void MotorController::freeze() {
 }
 
 void MotorController::extend() {
-  MotorController::freeze();
   digitalWrite(_directionPin, LOW);
   analogWrite(_pwmPin, 255);
 }
 
 void MotorController::retract() {
-  MotorController::freeze();
   digitalWrite(_directionPin, HIGH);
   analogWrite(_pwmPin, 255);
 }
