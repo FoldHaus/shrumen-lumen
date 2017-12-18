@@ -9,13 +9,14 @@
 
 class MotorController {
   public:
-    MotorController(int directionPin, int pwmPin);
+    MotorController(int directionPin, int pwmPin, bool debugMode);
     void extend();
     void retract();
     void freeze();
   private:
     int _directionPin;
     int _pwmPin;
+    bool _debugMode; 
 };
 
 

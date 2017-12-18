@@ -12,11 +12,14 @@ long retractionTime = 15000;
 long freezeTime = 30000;
 long refreshTime = 30000;
 
+//Config Constants
+bool debugMode = true;
+
 // State Variables
 int padState = 0;
 
 // Class Instantiations
-MotorController motorController(directionDigitalPin, speedPWMPin);
+MotorController motorController(directionDigitalPin, speedPWMPin, debugMode);
 
 void setup() {
   pinMode(ledPin, OUTPUT); 
