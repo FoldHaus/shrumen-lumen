@@ -15,6 +15,7 @@
 MotorController::MotorController(int directionPin, int pwmPin, bool debugMode = false) {
   pinMode(directionPin, OUTPUT);
   pinMode(pwmPin, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   _directionPin = directionPin;
   _pwmPin = pwmPin;
@@ -26,6 +27,7 @@ void MotorController::freeze() {
 
   if(_debugMode) {
     Serial.println("Freeze");
+    digitalWrite(LED_BUILTIN, LOW);
   }
 }
 
@@ -35,6 +37,7 @@ void MotorController::extend() {
   
   if(_debugMode) {
     Serial.println("Extend");
+    digitalWrite(LED_BUILTIN, HIGH);
   }
 }
 
@@ -44,6 +47,7 @@ void MotorController::retract() {
   
   if(_debugMode) {
     Serial.println("Retract");
+    digitalWrite(LED_BUILTIN, HIGH);
   }
 }
 
