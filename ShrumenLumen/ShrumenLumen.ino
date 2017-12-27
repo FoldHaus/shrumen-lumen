@@ -10,7 +10,7 @@ const int NEOPIXEL_DATA_PIN = 3;
 
 //Config Constants
 const bool MOTOR_CONTROLLER_DEBUG_MODE = false;
-const int LED_STRIP_LENGTH = 16;
+const int LED_STRIP_LENGTH = 60;
 
 // Sequence Timings
 const unsigned long extensionTime = 15000;
