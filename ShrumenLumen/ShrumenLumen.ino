@@ -35,7 +35,7 @@ unsigned long timer = 0;
 
 // LED Animation State Variables 
 // (Async animations functions need state variable counters)
-int ledSequence = GREEN;
+int currentSequence = GREEN;
 unsigned long int rainbowCount = 0;
 unsigned long int colorWipeTimer = 0;
 unsigned long int colorWipePixelNum = 0;
@@ -108,7 +108,6 @@ void animate() {
   else {
     // Reset state variables
     inProgress = false;
-    rainbowCount = 0;
     colorWipeTimer = 0;
     colorWipePixelNum = 0;
   }
@@ -117,11 +116,17 @@ void animate() {
 }
 
 void lightStrip(int lightSequence) {
+  if (lightSequence != currentSequence) {
+    colorWipePixelNum = 0;
+  }
+  
   switch (lightSequence) {
     case GREEN:
+      currentSequence = GREEN;
       colorWipe(0, 255, 0);
       break;
     case RED:
+      currentSequence = RED;
       colorWipe(255, 15, 0);
       break;
     default:
