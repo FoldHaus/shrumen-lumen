@@ -50,5 +50,3 @@ void MotorController::retract() {
     digitalWrite(LED_BUILTIN, HIGH);
   }
 }
-
-
