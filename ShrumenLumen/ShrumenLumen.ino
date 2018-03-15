@@ -27,9 +27,9 @@ const unsigned long freezeTime = 40000;
 const unsigned long refreshTime = 15000;
 const unsigned long sequenceTimings[4] = {
   extensionTime,
-  extensionTime + retractionTime,
-  extensionTime + retractionTime + freezeTime,
-  extensionTime + retractionTime + freezeTime + refreshTime
+  extensionTime + freezeTime,
+  extensionTime + freezeTime + retractionTime,
+  extensionTime + freezeTime + retractionTime + refreshTime
 };
 
 // Sequence State Variables
