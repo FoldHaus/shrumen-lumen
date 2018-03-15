@@ -21,20 +21,24 @@ const int RED = 2;
 const int BLUE = 3;
 
 // Sequence Timings
-const unsigned long extensionTime = 15000;
+const unsigned long extensionTime = 45000;
 const unsigned long retractionTime = 15000;
-const unsigned long freezeTime = 40000;
+const unsigned long freezeTime = 15000;
 const unsigned long refreshTime = 15000;
-const unsigned long sequenceTimings[4] = {
+const unsigned long extensionSequenceTimings[2] = {
   extensionTime,
-  extensionTime + retractionTime,
-  extensionTime + retractionTime + freezeTime,
-  extensionTime + retractionTime + freezeTime + refreshTime
+  extensionTime + freezeTime,
+};
+const unsigned long retractionSequenceTimings[2] = {
+  retractionTime,
+  retractionTime + refreshTime,
 };
 
-// Sequence State Variables
+// Sequence State Variables,
 int padState = LOW;
 bool inProgress = false;
+bool isExtended = false;
+bool isRetracted = true;
 unsigned long timer = 0;
 
 // LED Animation State Variables
@@ -46,9 +50,9 @@ unsigned long int colorWipePixelNum = 0;
 
 // Class Instantiations
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(
-                            LED_STRIP_LENGTH,
-                            NEOPIXEL_DATA_PIN
-                          );
+  LED_STRIP_LENGTH,
+  NEOPIXEL_DATA_PIN
+);
 MotorController motorController(
   DIRECTION_DIGIAL_PIN,
   SPEED_PWM_PIN,
@@ -86,6 +90,16 @@ void setup() {
   // Setup NeoPixel Strip & initialize all pixels to green'
   strip.begin();
   for (uint16_t i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, 0, 0, 255);
+    strip.show();
+  }
+
+  motorController.retract();
+  delay(30000);
+  motorController.freeze();
+
+  // Setup NeoPixel Strip & initialize all pixels to green'
+  for (uint16_t i = 0; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, 0, 255, 0);
     strip.show();
   }
@@ -99,39 +113,63 @@ void loop() {
     if (!inProgress) {
       timer = millis();
     }
+    
     // Start animation sequence
-    animate();
+    if (isRetracted) {
+      extensionAnimation();
+    } else if (isExtended) {
+      retractionAnimation();
+    }
   }
   else {
     motorController.freeze();
     timer = 0;
   }
+
   delay(76);
 }
 
-void animate() {
+void extensionAnimation() {
   inProgress = true;
   unsigned long delayTime = millis() - timer;
 
   // Extension Phase
-  if (delayTime <= sequenceTimings[0]) {
+  if (delayTime <= extensionSequenceTimings[0]) {
     // Caution - make sure timing is sufficient for linear actuator and light sequence
     lightStrip(RED);
     motorController.extend();
     Log.notice("SHRUMEN MOVEMENT: EXTENDING"CR);
   }
   // Freeze Phase
-  else if (delayTime > sequenceTimings[0] && delayTime <= sequenceTimings[1]) {
+  else if (delayTime > extensionSequenceTimings[0] && delayTime <= extensionSequenceTimings[1]) {
+    lightStrip(GREEN);
     motorController.freeze();
     Log.notice("SHRUMEN MOVEMENT: FREEZE TOP"CR);
   }
+  // End of Sequence
+  else {
+    Log.notice("----------------------------------------- END OF EXTENSION SEQUENCE"CR);
+    // Reset state variables
+    colorWipeTimer = 0;
+    colorWipePixelNum = 0;
+    inProgress = false;
+    isExtended = true;
+    isRetracted = false;
+  }
+}
+
+void retractionAnimation() {
+  inProgress = true;
+  unsigned long delayTime = millis() - timer;
+
   // Retraction Phase
-  else if (delayTime > sequenceTimings[1] && delayTime <= sequenceTimings[2]) {
+  if (delayTime <= retractionSequenceTimings[0]) {
+    lightStrip(RED);
     motorController.retract();
     Log.notice("SHRUMEN MOVEMENT: RETRACTING"CR);
   }
   // Refresh Phase
-  else if (delayTime > sequenceTimings[2] && delayTime <= sequenceTimings[3]) {
+  else if (delayTime > retractionSequenceTimings[0] && delayTime <= retractionSequenceTimings[1]) {
     // Caution - make sure timing is sufficient for linear actuator and light sequence
     motorController.freeze();
     lightStrip(GREEN);
@@ -139,11 +177,13 @@ void animate() {
   }
   // End of Sequence
   else {
-    Log.notice("----------------------------------------- END OF SEQUENCE"CR);
+    Log.notice("----------------------------------------- END OF RETRACTION SEQUENCE"CR);
     // Reset state variables
     colorWipeTimer = 0;
     colorWipePixelNum = 0;
     inProgress = false;
+    isRetracted = true;
+    isExtended = false;
   }
 }
 
