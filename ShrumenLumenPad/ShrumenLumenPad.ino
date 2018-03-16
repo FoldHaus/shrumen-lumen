@@ -21,36 +21,42 @@ const int RED = 2;
 const int BLUE = 3;
 
 // Sequence Timings
-const unsigned long extensionTime = 45000;
-const unsigned long retractionTime = 15000;
-const unsigned long freezeTime = 15000;
-const unsigned long refreshTime = 15000;
-const unsigned long extensionSequenceTimings[2] = {
-  extensionTime,
-  extensionTime + freezeTime,
+const unsigned long BASE_TIME_INTERVAL = 15000;
+const unsigned long EXTENSION_TIME = 4 * BASE_TIME_INTERVAL;
+const unsigned long RETRACTION_TIME = BASE_TIME_INTERVAL;
+const unsigned long FREEZE_TIME = BASE_TIME_INTERVAL;
+const unsigned long REFRESH_TIME = BASE_TIME_INTERVAL;
+const unsigned long EXTENSION_SEQUENCE_TIMINGS[2] = {
+  EXTENSION_TIME,
+  EXTENSION_TIME + FREEZE_TIME,
 };
-const unsigned long retractionSequenceTimings[2] = {
-  retractionTime,
-  retractionTime + refreshTime,
+const unsigned long RETRACTION_SEQUENCE_TIMINGS[2] = {
+  RETRACTION_TIME,
+  RETRACTION_TIME + REFRESH_TIME,
 };
 
 // Sequence State Variables,
 int padState = LOW;
-// Tracks if a sequence (extension or retraction) is currently happening
-bool inProgress = false;
-// These are set after the corresponding sequence ends, and remain set until the
-// following sequence is complete.
-bool isExtended = false;
-bool isRetracted = true;
-// Variable used for calculating asyc delays
-unsigned long timer = 0;
+bool inProgress = false; // Tracks if a sequence is currently happening.
+bool isExtended = false; // These are set after the corresponding sequence ends,
+bool isRetracted = true; // and remain set until the following sequence are done
+unsigned long timer = 0; // Variable used for calculating asyc delays
 
-// LED Animation State Variables
-// Async animations functions need state variable counters
+// Animation Constants
+const int COLORWIPE_LOOPS_PER_INCREMENT = 2;
+
+// LED Animation State Variables for Async Animations
 int currentSequence = GREEN;
 unsigned long int rainbowCount = 0;
 unsigned long int colorWipeTimer = 0;
 unsigned long int colorWipePixelNum = 0;
+
+
+// A delay is calculated to set our ColorWipe animation to require the full
+// BASE_TIME_INTERVAL to complete. Since the ColorWipe sets a pixel every other
+// interation of the loop, the math is as follows (for example):
+// 78 ms/loop * 2 loops/NeoPixel * 95 NeoPixels = 14400ms (15 seconds).
+const float PROGRAM_LOOP_DELAY = BASE_TIME_INTERVAL / (COLORWIPE_LOOPS_PER_INCREMENT * LED_STRIP_LENGTH);
 
 // Class Instantiations
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(
@@ -132,12 +138,7 @@ void loop() {
     timer = 0;
   }
 
-  // A delay of 76 is chosen to set our animations at a 15 second interval. For
-  // ColorWipe, we need to light 95 NeoPixels across a 15 second interval. Since
-  // the ColorWipe sets a pixel every other interation of the loop, the math is
-  // as follows: 76 ms/loop * 2 loops/NeoPixel * 95 NeoPixels = 14400ms (roughly
-  // 15 seconds.)
-  delay(76);
+  delay(PROGRAM_LOOP_DELAY);
 }
 
 void extensionAnimation() {
@@ -145,14 +146,14 @@ void extensionAnimation() {
   unsigned long delayTime = millis() - timer;
 
   // Extension Phase
-  if (delayTime <= extensionSequenceTimings[0]) {
+  if (delayTime <= EXTENSION_SEQUENCE_TIMINGS[0]) {
     // Caution - make sure timing is sufficient for linear actuator and light sequence
     lightStrip(RED);
     motorController.extend();
     Log.notice("SHRUMEN MOVEMENT: EXTENDING"CR);
   }
   // Freeze Phase
-  else if (delayTime > extensionSequenceTimings[0] && delayTime <= extensionSequenceTimings[1]) {
+  else if (delayTime > EXTENSION_SEQUENCE_TIMINGS[0] && delayTime <= EXTENSION_SEQUENCE_TIMINGS[1]) {
     lightStrip(GREEN);
     motorController.freeze();
     Log.notice("SHRUMEN MOVEMENT: FREEZE TOP"CR);
@@ -174,13 +175,13 @@ void retractionAnimation() {
   unsigned long delayTime = millis() - timer;
 
   // Retraction Phase
-  if (delayTime <= retractionSequenceTimings[0]) {
+  if (delayTime <= RETRACTION_SEQUENCE_TIMINGS[0]) {
     lightStrip(RED);
     motorController.retract();
     Log.notice("SHRUMEN MOVEMENT: RETRACTING"CR);
   }
   // Refresh Phase
-  else if (delayTime > retractionSequenceTimings[0] && delayTime <= retractionSequenceTimings[1]) {
+  else if (delayTime > RETRACTION_SEQUENCE_TIMINGS[0] && delayTime <= RETRACTION_SEQUENCE_TIMINGS[1]) {
     // Caution - make sure timing is sufficient for linear actuator and light sequence
     motorController.freeze();
     lightStrip(GREEN);
@@ -224,7 +225,7 @@ void lightStrip(int lightSequence) {
 
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t r, uint32_t g, uint32_t b) {
-  if (colorWipeTimer % 2 == 0) {
+  if (colorWipeTimer % COLORWIPE_LOOPS_PER_INCREMENT == 0) {
     strip.setPixelColor(
       colorWipePixelNum % strip.numPixels(),
       r,
