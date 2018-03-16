@@ -3,7 +3,7 @@
 
 #include "MotorController.h"
 
-#define LOGLEVEL LOG_LEVEL_SILENT
+#define LOGLEVEL LOG_LEVEL_DEBUG_SILENT
 
 // Pin Definitions
 const int DIRECTION_DIGIAL_PIN = 12;
