@@ -3,7 +3,7 @@
 
 #include "MotorController.h"
 
-#define LOGLEVEL LOG_LEVEL_DEBUG
+#define LOGLEVEL LOG_LEVEL_SILENT
 
 // Pin Definitions
 const int DIRECTION_DIGIAL_PIN = 12;
@@ -37,16 +37,12 @@ const unsigned long RETRACTION_SEQUENCE_TIMINGS[2] = {
   RETRACTION_TIME,
   RETRACTION_TIME + BOTTOM_FREEZE_TIME,
 };
-// We choose a random trigger period between a specified range.
-const unsigned long RANDOM_TRIGGER_PERIOD = random(60000, 120000);
-unsigned long randomTriggerTimer = 0;
 
 // Sequence State Variables,
 int padState = LOW;
 bool inProgress = false; // Tracks if a sequence is currently happening.
 bool isExtended = false; // These are set after the corresponding sequence ends,
 bool isRetracted = true; // and remain set until the following sequence are done.
-bool shouldRandomlyTrigger = false; // Set when sequnce should start on its own.
 unsigned long timer = 0; // Variable used for calculating asyc delays.
 
 // Animation Constants
@@ -117,19 +113,13 @@ void setup() {
 
   // Set all pixels to green once the installation is ready to go again.
   lightStrip(GREEN_IMMEDIATE);
-
-  randomTriggerTimer = millis();
 }
 
 void loop() {
   padState = digitalRead(PAD_PIN);
   Log.verbose("PAD STATE: %T || inProgress: %T"CR, padState, inProgress);
 
-  if ((millis() - randomTriggerTimer) > RANDOM_TRIGGER_PERIOD) {
-    shouldRandomlyTrigger = true;
-  }
-
-  if (padState == HIGH || inProgress || shouldRandomlyTrigger) {
+  if (padState == HIGH || inProgress) {
     if (!inProgress) {
       timer = millis();
     }
@@ -175,7 +165,6 @@ void extensionAnimation() {
     isExtended = true;
     isRetracted = false;
     resetColorWipe();
-    resetRandomTrigger();
   }
 }
 
@@ -204,13 +193,7 @@ void retractionAnimation() {
     isRetracted = true;
     isExtended = false;
     resetColorWipe();
-    resetRandomTrigger();
   }
-}
-
-void resetRandomTrigger() {
-  shouldRandomlyTrigger = false;
-  randomTriggerTimer = millis();
 }
 
 void resetColorWipe() {
