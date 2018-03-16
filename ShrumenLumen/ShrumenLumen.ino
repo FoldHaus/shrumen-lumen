@@ -36,13 +36,17 @@ const unsigned long retractionSequenceTimings[2] = {
 
 // Sequence State Variables,
 int padState = LOW;
+// Tracks if a sequence (extension or retraction) is currently happening
 bool inProgress = false;
+// These are set after the corresponding sequence ends, and remain set until the
+// following sequence is complete.
 bool isExtended = false;
 bool isRetracted = true;
+// Variable used for calculating asyc delays
 unsigned long timer = 0;
 
 // LED Animation State Variables
-// (Async animations functions need state variable counters)
+// Async animations functions need state variable counters
 int currentSequence = GREEN;
 unsigned long int rainbowCount = 0;
 unsigned long int colorWipeTimer = 0;
@@ -70,7 +74,6 @@ void printNewline(Print* _logOutput) {
 }
 
 void setup() {
-
   Serial.begin(9600);
 
   randomSeed(analogRead(0));
@@ -78,7 +81,6 @@ void setup() {
   Log.begin(LOG_LEVEL_VERBOSE, &Serial);
 
   //Start logging
-
   Log.notice(F(CR "******************************************" CR));
   Log.notice(  "***          SHRUMEN LUMEN - PAD                " CR);
   Log.notice(F("******************* ")); Log.notice("*********************** " CR);
@@ -87,18 +89,22 @@ void setup() {
   pinMode(PAD_PIN, INPUT_PULLDOWN);
   analogWrite(SPEED_PWM_PIN, 0);
 
-  // Setup NeoPixel Strip & initialize all pixels to green'
+  // Setup NeoPixel Strip & initialize all pixels to blue.
+  // This marks the initial reset period, during which the Shrumen return to a
+  // retracted state.
   strip.begin();
   for (uint16_t i = 0; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, 0, 0, 255);
     strip.show();
   }
 
+  // Retract all of the Shrumen for 30 seconds (more than enough for full
+  // retraction).
   motorController.retract();
   delay(30000);
   motorController.freeze();
 
-  // Setup NeoPixel Strip & initialize all pixels to green'
+  // Set all pixels to green once the installation is ready to go again.
   for (uint16_t i = 0; i < strip.numPixels(); i++) {
     strip.setPixelColor(i, 0, 255, 0);
     strip.show();
@@ -126,6 +132,11 @@ void loop() {
     timer = 0;
   }
 
+  // A delay of 76 is chosen to set our animations at a 15 second interval. For
+  // ColorWipe, we need to light 95 NeoPixels across a 15 second interval. Since
+  // the ColorWipe sets a pixel every other interation of the loop, the math is
+  // as follows: 76 ms/loop * 2 loops/NeoPixel * 95 NeoPixels = 14400ms (roughly
+  // 15 seconds.)
   delay(76);
 }
 
