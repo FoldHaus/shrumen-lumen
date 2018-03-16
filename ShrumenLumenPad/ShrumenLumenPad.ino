@@ -14,6 +14,7 @@ const int NEOPIXEL_DATA_PIN = 3;
 // Config Constants
 const bool MOTOR_CONTROLLER_DEBUG_MODE = false;
 const int LED_STRIP_LENGTH = 95;
+const unsigned long STARTUP_RETRACTION_PERIOD = 30000;
 
 // Color Constants
 const int GREEN_WIPE = 1;
@@ -21,23 +22,23 @@ const int RED_WIPE = 2;
 const int BLUE_WIPE = 3;
 const int GREEN_IMMEDIATE = 4;
 const int RED_IMMEDIATE = 5;
-const int BLUE_IMMEDIATE= 6;
+const int BLUE_IMMEDIATE = 6;
 
 // Sequence Timings
-const unsigned long BASE_TIME_INTERVAL = 15000;
-const unsigned long EXTENSION_TIME = 4 * BASE_TIME_INTERVAL;
-const unsigned long RETRACTION_TIME = BASE_TIME_INTERVAL;
-const unsigned long FREEZE_TIME = BASE_TIME_INTERVAL;
-const unsigned long REFRESH_TIME = BASE_TIME_INTERVAL;
+const unsigned long EXTENSION_TIME = 25000;
+const unsigned long TOP_FREEZE_TIME = 15000;
+const unsigned long RETRACTION_TIME = 25000;
+const unsigned long BOTTOM_FREEZE_TIME = 15000;
 const unsigned long EXTENSION_SEQUENCE_TIMINGS[2] = {
   EXTENSION_TIME,
-  EXTENSION_TIME + FREEZE_TIME,
+  EXTENSION_TIME + TOP_FREEZE_TIME,
 };
 const unsigned long RETRACTION_SEQUENCE_TIMINGS[2] = {
   RETRACTION_TIME,
-  RETRACTION_TIME + REFRESH_TIME,
+  RETRACTION_TIME + BOTTOM_FREEZE_TIME,
 };
-const unsigned long RANDOM_TRIGGER_PERIOD = 60000;
+// We choose a random trigger period between a specified range.
+const unsigned long RANDOM_TRIGGER_PERIOD = random(60000, 120000);
 unsigned long randomTriggerTimer = 0;
 
 // Sequence State Variables,
@@ -58,10 +59,11 @@ unsigned long int colorWipeTimer = 0;
 unsigned long int colorWipePixelNum = 0;
 
 // A delay is calculated to set our ColorWipe animation to require the full
-// BASE_TIME_INTERVAL to complete. Since the ColorWipe sets a pixel every other
+// animationTimePeriod to complete. Since the ColorWipe sets a pixel every other
 // interation of the loop, the math is as follows (for example):
-// 78 ms/loop * 2 loops/NeoPixel * 95 NeoPixels = 14400ms (15 seconds).
-const float PROGRAM_LOOP_DELAY = BASE_TIME_INTERVAL / (COLORWIPE_LOOPS_PER_INCREMENT * LED_STRIP_LENGTH);
+// 78 ms/loop * 2 loops/NeoPixel * 95 NeoPixels = 15000ms.
+unsigned long animationTimePeriod = TOP_FREEZE_TIME;
+float programLoopDelay = animationTimePeriod / (COLORWIPE_LOOPS_PER_INCREMENT * LED_STRIP_LENGTH);
 
 // Class Instantiations
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(
@@ -110,7 +112,7 @@ void setup() {
   // Retract all of the Shrumen for 30 seconds (more than enough for full
   // retraction).
   motorController.retract();
-  delay(30000);
+  delay(STARTUP_RETRACTION_PERIOD);
   motorController.freeze();
 
   // Set all pixels to green once the installation is ready to go again.
@@ -144,23 +146,23 @@ void loop() {
     timer = 0;
   }
 
-  delay(PROGRAM_LOOP_DELAY);
+  programLoopDelay = animationTimePeriod / (COLORWIPE_LOOPS_PER_INCREMENT * LED_STRIP_LENGTH);
+  delay(programLoopDelay);
 }
 
 void extensionAnimation() {
   inProgress = true;
   unsigned long delayTime = millis() - timer;
-
   // Extension Phase
   if (delayTime <= EXTENSION_SEQUENCE_TIMINGS[0]) {
-    // Caution - make sure timing is sufficient for linear actuator and light sequence
     lightStrip(RED_IMMEDIATE);
-
     motorController.extend();
     Log.notice("SHRUMEN MOVEMENT: EXTENDING"CR);
   }
   // Freeze Phase
   else if (delayTime > EXTENSION_SEQUENCE_TIMINGS[0] && delayTime <= EXTENSION_SEQUENCE_TIMINGS[1]) {
+    // Caution - make sure timing is sufficient for linear actuator and light sequence
+    animationTimePeriod = TOP_FREEZE_TIME;
     lightStrip(GREEN_WIPE);
     motorController.freeze();
     Log.notice("SHRUMEN MOVEMENT: FREEZE TOP"CR);
@@ -180,7 +182,6 @@ void extensionAnimation() {
 void retractionAnimation() {
   inProgress = true;
   unsigned long delayTime = millis() - timer;
-
   // Retraction Phase
   if (delayTime <= RETRACTION_SEQUENCE_TIMINGS[0]) {
     lightStrip(RED_IMMEDIATE);
@@ -191,6 +192,7 @@ void retractionAnimation() {
   else if (delayTime > RETRACTION_SEQUENCE_TIMINGS[0] && delayTime <= RETRACTION_SEQUENCE_TIMINGS[1]) {
     // Caution - make sure timing is sufficient for linear actuator and light sequence
     motorController.freeze();
+    animationTimePeriod = BOTTOM_FREEZE_TIME;
     lightStrip(GREEN_WIPE);
     Log.notice("SHRUMEN MOVEMENT: FREEZE BOTTOM"CR);
   }
@@ -235,6 +237,9 @@ void lightStrip(int lightSequence) {
       colorWipe(0, 0, 255);
       break;
     case GREEN_IMMEDIATE:
+      if (currentSequence == GREEN_IMMEDIATE) {
+        break;
+      }
       currentSequence = GREEN_IMMEDIATE;
       for (uint16_t i = 0; i < strip.numPixels(); i++) {
         strip.setPixelColor(i, 0, 180, 20);
@@ -242,6 +247,9 @@ void lightStrip(int lightSequence) {
       }
       break;
     case RED_IMMEDIATE:
+      if (currentSequence == RED_IMMEDIATE) {
+        break;
+      }
       currentSequence = RED_IMMEDIATE;
       for (uint16_t i = 0; i < strip.numPixels(); i++) {
         strip.setPixelColor(i, 244, 18, 2);
@@ -249,6 +257,9 @@ void lightStrip(int lightSequence) {
       }
       break;
     case BLUE_IMMEDIATE:
+      if (currentSequence == BLUE_IMMEDIATE) {
+        break;
+      }
       currentSequence = BLUE_IMMEDIATE;
       for (uint16_t i = 0; i < strip.numPixels(); i++) {
         strip.setPixelColor(i, 0, 0, 255);
