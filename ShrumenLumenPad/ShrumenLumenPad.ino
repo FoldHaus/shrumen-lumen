@@ -16,9 +16,12 @@ const bool MOTOR_CONTROLLER_DEBUG_MODE = false;
 const int LED_STRIP_LENGTH = 95;
 
 // Color Constants
-const int GREEN = 1;
-const int RED = 2;
-const int BLUE = 3;
+const int GREEN_WIPE = 1;
+const int RED_WIPE = 2;
+const int BLUE_WIPE = 3;
+const int GREEN_IMMEDIATE = 4;
+const int RED_IMMEDIATE = 5;
+const int BLUE_IMMEDIATE= 6;
 
 // Sequence Timings
 const unsigned long BASE_TIME_INTERVAL = 15000;
@@ -49,7 +52,7 @@ unsigned long timer = 0; // Variable used for calculating asyc delays.
 const int COLORWIPE_LOOPS_PER_INCREMENT = 2;
 
 // LED Animation State Variables for Async Animations
-int currentSequence = GREEN;
+int currentSequence = GREEN_WIPE;
 unsigned long int rainbowCount = 0;
 unsigned long int colorWipeTimer = 0;
 unsigned long int colorWipePixelNum = 0;
@@ -97,14 +100,12 @@ void setup() {
   pinMode(PAD_PIN, INPUT_PULLDOWN);
   analogWrite(SPEED_PWM_PIN, 0);
 
+  strip.begin();
+
   // Setup NeoPixel Strip & initialize all pixels to blue.
   // This marks the initial reset period, during which the Shrumen return to a
   // retracted state.
-  strip.begin();
-  for (uint16_t i = 0; i < strip.numPixels(); i++) {
-    strip.setPixelColor(i, 0, 0, 255);
-    strip.show();
-  }
+  lightStrip(BLUE_IMMEDIATE);
 
   // Retract all of the Shrumen for 30 seconds (more than enough for full
   // retraction).
@@ -113,10 +114,7 @@ void setup() {
   motorController.freeze();
 
   // Set all pixels to green once the installation is ready to go again.
-  for (uint16_t i = 0; i < strip.numPixels(); i++) {
-    strip.setPixelColor(i, 0, 255, 0);
-    strip.show();
-  }
+  lightStrip(GREEN_IMMEDIATE);
 
   randomTriggerTimer = millis();
 }
@@ -156,13 +154,14 @@ void extensionAnimation() {
   // Extension Phase
   if (delayTime <= EXTENSION_SEQUENCE_TIMINGS[0]) {
     // Caution - make sure timing is sufficient for linear actuator and light sequence
-    lightStrip(RED);
+    lightStrip(RED_IMMEDIATE);
+
     motorController.extend();
     Log.notice("SHRUMEN MOVEMENT: EXTENDING"CR);
   }
   // Freeze Phase
   else if (delayTime > EXTENSION_SEQUENCE_TIMINGS[0] && delayTime <= EXTENSION_SEQUENCE_TIMINGS[1]) {
-    lightStrip(GREEN);
+    lightStrip(GREEN_WIPE);
     motorController.freeze();
     Log.notice("SHRUMEN MOVEMENT: FREEZE TOP"CR);
   }
@@ -184,7 +183,7 @@ void retractionAnimation() {
 
   // Retraction Phase
   if (delayTime <= RETRACTION_SEQUENCE_TIMINGS[0]) {
-    lightStrip(RED);
+    lightStrip(RED_IMMEDIATE);
     motorController.retract();
     Log.notice("SHRUMEN MOVEMENT: RETRACTING"CR);
   }
@@ -192,7 +191,7 @@ void retractionAnimation() {
   else if (delayTime > RETRACTION_SEQUENCE_TIMINGS[0] && delayTime <= RETRACTION_SEQUENCE_TIMINGS[1]) {
     // Caution - make sure timing is sufficient for linear actuator and light sequence
     motorController.freeze();
-    lightStrip(GREEN);
+    lightStrip(GREEN_WIPE);
     Log.notice("SHRUMEN MOVEMENT: FREEZE BOTTOM"CR);
   }
   // End of Sequence
@@ -223,17 +222,38 @@ void lightStrip(int lightSequence) {
   }
 
   switch (lightSequence) {
-    case GREEN:
-      currentSequence = GREEN;
+    case GREEN_WIPE:
+      currentSequence = GREEN_WIPE;
       colorWipe(0, 180, 20);
       break;
-    case RED:
-      currentSequence = RED;
+    case RED_WIPE:
+      currentSequence = RED_WIPE;
       colorWipe(244, 18, 2);
       break;
-    case BLUE:
-      currentSequence = BLUE;
+    case BLUE_WIPE:
+      currentSequence = BLUE_WIPE;
       colorWipe(0, 0, 255);
+      break;
+    case GREEN_IMMEDIATE:
+      currentSequence = GREEN_IMMEDIATE;
+      for (uint16_t i = 0; i < strip.numPixels(); i++) {
+        strip.setPixelColor(i, 0, 180, 20);
+        strip.show();
+      }
+      break;
+    case RED_IMMEDIATE:
+      currentSequence = RED_IMMEDIATE;
+      for (uint16_t i = 0; i < strip.numPixels(); i++) {
+        strip.setPixelColor(i, 244, 18, 2);
+        strip.show();
+      }
+      break;
+    case BLUE_IMMEDIATE:
+      currentSequence = BLUE_IMMEDIATE;
+      for (uint16_t i = 0; i < strip.numPixels(); i++) {
+        strip.setPixelColor(i, 0, 0, 255);
+        strip.show();
+      }
       break;
     default:
       colorWipe(0, 180, 20);
