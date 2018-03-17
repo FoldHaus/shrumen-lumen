@@ -26,9 +26,9 @@ const int BLUE_IMMEDIATE = 6;
 
 // Sequence Timings
 const unsigned long EXTENSION_TIME = 25000;
-const unsigned long TOP_FREEZE_TIME = 15000;
+const unsigned long TOP_FREEZE_TIME = 60000;
 const unsigned long RETRACTION_TIME = 25000;
-const unsigned long BOTTOM_FREEZE_TIME = 15000;
+const unsigned long BOTTOM_FREEZE_TIME = 60000;
 const unsigned long EXTENSION_SEQUENCE_TIMINGS[2] = {
   EXTENSION_TIME,
   EXTENSION_TIME + TOP_FREEZE_TIME,
